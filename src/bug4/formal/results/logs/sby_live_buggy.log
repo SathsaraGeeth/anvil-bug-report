@@ -1,0 +1,19 @@
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug4/rtl/buggy.sv' to '/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy/src/buggy.sv'.
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug4/formal/sby_properties.sv' to '/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy/src/sby_properties.sv'.
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] engine_0: aiger suprove
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] base: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] base: Warning: Wire sby_properties.\f_clk is used but has no driver.
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] base: finished (returncode=0)
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] prep: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy/model; yosys -ql design_prep.log design_prep.ys"
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] prep: Warning: Wire sby_properties.\f_clk is used but has no driver.
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] prep: finished (returncode=0)
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] aig: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy/model; yosys -ql design_aiger.log design_aiger.ys"
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] aig: finished (returncode=0)
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] engine_0: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy; suprove +simple_liveness model/design_aiger.aig"
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] engine_0: finished (returncode=0)
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] engine_0: Status returned by engine: PASS
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] summary: engine_0 (aiger suprove) returned PASS
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] summary: engine_0 did not produce any traces
+SBY  2:25:46 [/tmp/rtl_bugs_matrix_oBbrad/live_bug4_buggy] DONE (PASS, rc=0)

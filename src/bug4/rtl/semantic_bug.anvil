@@ -1,0 +1,33 @@
+enum handshake_event {
+    message,
+    acknowledgement
+}
+
+struct handshake_observation {
+    accepted : logic[4],
+    waiting  : logic
+}
+
+chan handshake_observation_ch {
+    left  event : (handshake_event@#1) @dyn-@dyn,
+    right obs   : (handshake_observation@#1) @dyn-@dyn
+}
+
+proc handshake_delay_semantic_bug(port : left handshake_observation_ch) {
+    reg accepted : logic[4];
+    reg waiting  : logic;
+    reg result   : handshake_observation;
+
+    loop {
+        let event = recv port.event >>
+        if (event == handshake_event::message) {
+            set accepted := *accepted + 4'b0001;
+            set waiting := 1'b1
+        } else {
+            set waiting := 1'b0
+        } >>
+        set result.accepted := *accepted;
+        set result.waiting := *waiting >>
+        send port.obs(*result) >> cycle 1
+    }
+}

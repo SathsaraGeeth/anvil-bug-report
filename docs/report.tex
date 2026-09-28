@@ -1,0 +1,1542 @@
+% ----------------------------------------------------------------
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath,amssymb}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{xurl}
+\usepackage[hidelinks]{hyperref}
+% ----------------------------------------------------------------
+
+
+
+
+
+% ----------------------------------------------------------------
+
+\lstdefinelanguage{SystemVerilog}{
+  morekeywords={always,always_ff,always_comb,assert,assign,begin,end,endproperty,
+    if,else,property,logic,for},
+  sensitive=true,
+  morecomment=[l]{//}
+}
+\lstset{
+  language=SystemVerilog,
+  basicstyle=\ttfamily\scriptsize,
+  columns=fullflexible,
+  keepspaces=true,
+  frame=single,
+  rulecolor=\color{black!55},
+  backgroundcolor=\color{black!3},
+  framesep=3pt,
+  xleftmargin=4pt,
+  xrightmargin=4pt,
+  breaklines=true,
+  showstringspaces=false,
+  aboveskip=0.8em,
+  belowskip=0.8em
+}
+\titleformat{\section}
+  {\normalfont\large\bfseries}
+  {\thesection.}{0.55em}{}
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{2.2ex plus 0.7ex minus 0.3ex}{1.0ex}
+\titlespacing*{\subsection}{0pt}{1.8ex plus 0.5ex minus 0.2ex}{0.7ex}
+\setlist[itemize]{
+  label=\textbullet,
+  leftmargin=1.35em,
+  labelsep=0.55em,
+  topsep=0.55em,
+  itemsep=0.55em,
+  parsep=0pt,
+  partopsep=0pt
+}
+\raggedbottom
+\setlength{\emergencystretch}{2em}
+\setcounter{secnumdepth}{2}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\newcommand{\bugsection}[2]{%
+  \refstepcounter{section}%
+  \setcounter{subsection}{0}%
+  \section*{Bug#1: #2}%
+}
+\urlstyle{same}
+\hypersetup{
+  hidelinks,
+  pdftitle={[Draft] SystemVerilog RTL Bug Study},
+  pdfauthor={Geeth Sathsara Wijesekara}}
+
+% ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+% ----------------------------------------------------------------
+
+% Title + Cover Page
+\title{[Draft] SystemVerilog RTL Bug Study}
+\author{Geeth Sathsara Wijesekara}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+% ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+% ----------------------------------------------------------------
+
+% Introduction
+
+\section*{Introduction}
+
+This report examines five documented RTL design bugs from the open-source
+projects Corundum~\cite{corundum}, OpenTitan~\cite{opentitan}, and
+CVA6~\cite{cva6}. Each bug is reduced to a minimal reproducer and implemented
+in both SystemVerilog and Anvil~\cite{anvil-paper,anvil-github}, then verified
+using standard industry approaches and the Anvil compiler where applicable.
+The report discusses how these bugs escaped their original verification
+environments and whether Anvil's compiler checks could have detected them
+earlier.
+
+% ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% ----------------------------------------------------------------
+% Bug1
+\bugsection{1}{Partial queue-memory initialization}
+% -----------------------
+
+
+
+% -----------------------
+% 1. Instance
+\subsection{Instance}
+
+This bug comes from Corundum~\cite{corundum}, an open-source
+high-performance FPGA-based network interface card (NIC).
+
+The three affected queue-management modules~\cite{queue-manager-src,
+cpl-queue-manager-src,tx-scheduler-src} store per-queue state in inferred
+FPGA RAM. During initialization, every RAM entry must be set to zero so that
+every legal queue index begins in an empty state.
+
+In commit \texttt{0560f98e}~\cite{corundum-intro}, a split nested loop was added
+to support more than 4,000 queues while working around Quartus's loop-iteration
+limit. Quartus Prime is Intel's FPGA toolchain~\cite{quartus}. This workaround
+introduced the bug discussed below;
+it was later corrected in PR~\#96~\cite{corundum-fix} and its fixing
+commit~\cite{corundum-fix-commit}.
+% -----------------------
+
+
+
+% -----------------------
+% 2. Mechanism
+\subsection{Mechanism}
+
+% - Cause
+The above workaround confused the address width with the number of entries. The RAM
+contains \texttt{2**QUEUE\_INDEX\_WIDTH} entries, but the new outer loop
+stopped at \texttt{QUEUE\_INDEX\_WIDTH}.
+
+\begin{lstlisting}
+// Buggy code
+for (i = 0; i < QUEUE_INDEX_WIDTH;
+     i = i + 2**(QUEUE_INDEX_WIDTH/2))
+  for (j = i; j < i + 2**(QUEUE_INDEX_WIDTH/2); j = j + 1)
+    queue_ram[j] = 0;
+\end{lstlisting}
+
+Therefore, some entries remain uninitialized. The fix changes the outer bound
+to \texttt{2**QUEUE\_INDEX\_WIDTH}.
+
+\begin{lstlisting}
+// Fixed code
+for (i = 0; i < 2**QUEUE_INDEX_WIDTH;
+     i = i + 2**(QUEUE_INDEX_WIDTH/2))
+  for (j = i; j < i + 2**(QUEUE_INDEX_WIDTH/2); j = j + 1)
+    queue_ram[j] = 0;
+\end{lstlisting}
+
+% - Minimal Repro
+The minimal buggy reproducers in SystemVerilog~\cite{bug1-sv-buggy} and
+Anvil~\cite{bug1-anvil-buggy}, together with their fixed SystemVerilog
+\cite{bug1-sv-fixed} and Anvil~\cite{bug1-anvil-fixed} versions, are available
+in the cited reproduction files.
+% -----------------------
+
+
+
+% -----------------------
+% 3. Why it survived
+\subsection{Why It Survived}
+
+% - Why simulation, review, or lint did not catch it
+At the pre-fix commit, Corundum's cocotb tests had no full-memory or X-state
+check. Both used this queue range
+\cite{corundum-parent,queue-manager-test,cpl-queue-manager-test}:
+
+\begin{lstlisting}[language=Python]
+QUEUE_INDEX_WIDTH = 8
+
+for q in range(4):
+    configure_queue(q)
+
+q = random.randrange(4)
+exercise_queue(q)
+\end{lstlisting}
+
+An 8-bit index provides 256 entries, but the tests used only queues 0 through
+3. The faulty loop initialized entries 0 through 15, so every tested queue
+appeared correct.
+
+% - Was condition rare? property dont cover it? tool silent by construction?
+The loop was legal syntax, so lint could not infer the missing addresses. The
+fix added no full-range test or X-state assertion~\cite{corundum-fix}.
+% -----------------------
+
+
+
+% -----------------------
+% 4. Class
+\subsection{Classification}
+
+% - Name of the class
+This bug can be classified as a \textbf{Reset and initialization} bug.
+
+% - Second instance of the same class (can be from section 4)
+Rocket Chip provides a second independent instance of this class
+\cite{rocket-init}. Its SRAMs were not initialized, which caused X propagation
+in simulation.
+% -----------------------
+
+
+
+% -----------------------
+% 5. Detection
+\subsection{Detection}
+
+% - SVA property/lint to catch this class
+This type of bug can be detected by asserting that every memory entry has the
+expected value immediately after reset or initialization. This invariant can
+be checked in simulation or as a formal property.
+
+The simulation implementation \cite{bug1-simulation-check}:
+
+\begin{lstlisting}
+#1;
+for (int q = 0; q < QUEUE_COUNT; q++)
+  assert (!$isunknown(queue_ram[q * 32 +: 32]) &&
+          queue_ram[q * 32 +: 32] == '0);
+\end{lstlisting}
+
+The corresponding formal property is implemented in
+\cite{bug1-formal-check}:
+
+\begin{lstlisting}
+property p_entry_is_initialized(logic [31:0] entry);
+  @(posedge f_clk)
+  !$isunknown(entry) && entry == '0;
+endproperty
+
+for (genvar q = 0; q < QUEUE_COUNT; q++) begin
+  assert property (
+    p_entry_is_initialized(f_queue_ram[q * 32 +: 32]));
+end
+\end{lstlisting}
+
+% - What the above detection mechanism cost (false positives, runtime, required assumptions,
+%   or design constraints)
+Simulation is cheap for this small memory, and its runtime grows linearly with
+the number of entries. Formal checking is exhaustive, but its state space
+grows with the memory.
+
+Anvil's checker generally cannot detect this type of bug, and it accepts both
+versions. Its generated RTL initializes the full register, masking this
+particular bug~\cite{bug1-anvil-buggy,bug1-anvil-fixed,
+bug1-anvil-results}.
+
+% ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% ----------------------------------------------------------------
+% Bug2
+\bugsection{2}{Stale-data exposure from an empty FIFO}
+
+% -----------------------
+
+
+% -----------------------
+
+% 1. Instance
+\subsection{Instance}
+
+% - Design
+This bug comes from OpenTitan~\cite{opentitan}, an open-source silicon
+root-of-trust project. It is a bit different from the other RTL bugs in the
+report.
+
+The FIFO buffers incoming UART words and exposes the previously received word
+when it is empty. Since this is visible to software, an empty FIFO must not
+reveal a byte previously received by another isolated application. The issue
+therefore identifies this as a \textbf{security} concern.
+
+Issue~\#2315~\cite{fifo-issue} tracked the report. PR~\#2420
+documents and corrects the stale-data exposure~\cite{fifo-fix}, with the
+change merged in commit~\cite{fifo-fix-commit}.
+% -----------------------
+
+
+% -----------------------
+
+% 2. Mechanism
+\subsection{Mechanism}
+
+% - Cause
+The FIFO reset its pointers but not its storage. Its output remained connected
+to the stored word even when the FIFO was empty.
+
+\begin{lstlisting}
+// Buggy code
+if (Pass)
+  assign rdata = (fifo_empty && wvalid) ? wdata : storage_rdata;
+else
+  assign rdata = storage_rdata;
+\end{lstlisting}
+
+Therefore, removing the last byte cleared the valid state but left that byte
+visible to the software. The fix masks the output with zero when the FIFO is empty.
+
+\begin{lstlisting}
+// Fixed code
+assign rdata = empty ? '0 : rdata_int;
+\end{lstlisting}
+
+% - Minimal Repro
+The buggy and fixed SystemVerilog variants are provided separately
+\cite{bug2-sv-buggy,bug2-sv-fixed}, together with their Anvil versions
+\cite{bug2-anvil-buggy,bug2-anvil-fixed}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 3. Why it survived
+\subsection{Why It Survived}
+
+% - Why simulation, review, or lint did not catch it
+OpenTitan checked the FIFO output only while \texttt{rvalid} was high
+\cite{fifo-parent,fifo-issue,fifo-fix}:
+
+\begin{lstlisting}
+assert property (rvalid |-> !$isunknown(rdata));
+\end{lstlisting}
+
+When the FIFO became empty, this assertion stopped checking \texttt{rdata}.
+The UART tests also read data only from a non-empty FIFO
+\cite{uart-testplan,uart-scoreboard}.
+
+% - Was condition rare? property dont cover it? tool silent by construction?
+The failing operation was therefore not tested. The fix added no test or
+assertion~\cite{fifo-fix}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 4. Class
+\subsection{Classification}
+
+% - Name of the class
+This bug can be classified as a \textbf{Buffering, FIFOs, and flow control} bug.
+
+% - Second instance of the same class (can be from section 4)
+The assignment already gives the OpenCores UART16550 as a second instance. It
+used stale receive-FIFO data without first checking whether the FIFO was empty
+\cite{uart16550-stale}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 5. Detection
+\subsection{Detection}
+
+% - SVA property/lint to catch this class
+This type of bug can be detected by checking that an externally visible FIFO
+returns zero whenever it is empty. The invariant can be checked in simulation
+or as a formal property.
+
+The simulation implementation \cite{bug2-simulation-check}:
+
+\begin{lstlisting}
+assert (empty && rdata == '0)
+  else $fatal(1, "empty FIFO exposed %h", rdata);
+\end{lstlisting}
+
+The corresponding formal property is implemented in
+\cite{bug2-formal-check}:
+
+\begin{lstlisting}
+always_ff @(posedge f_clk) begin
+  if (!f_rst_n)
+    f_past_valid <= 1'b0;
+  else
+    f_past_valid <= 1'b1;
+end
+
+property p_reset_before_past_valid;
+  @(posedge f_clk)
+  !f_past_valid |-> !f_rst_n;
+endproperty: p_reset_before_past_valid
+
+property p_empty_data_is_zero;
+  @(posedge f_clk) disable iff (!f_rst_n)
+  f_past_valid && f_empty |-> (f_rdata == '0);
+endproperty: p_empty_data_is_zero
+
+assume property (p_reset_before_past_valid);
+
+a_empty_data_is_zero:
+  assert property (p_empty_data_is_zero);
+\end{lstlisting}
+
+% - What the above detection mechanism cost (false positives, runtime, required assumptions,
+%   or design constraints)
+The check is cheap, but the fix also adds a data-width multiplexer.
+
+Anvil's checker generally cannot detect this type of bug because the retained
+storage is not modified while borrowed. It accepts both versions, so the
+invariant must be checked separately
+\cite{bug2-anvil-buggy,bug2-anvil-fixed,bug2-anvil-results}.
+
+% ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% ----------------------------------------------------------------
+
+% Bug3
+\bugsection{3}{Unqualified asynchronous-FIFO payload crossing}
+
+% -----------------------
+
+
+% -----------------------
+
+% 1. Instance
+\subsection{Instance}
+
+% - Design
+This bug is from OpenTitan~\cite{opentitan}, in the asynchronous FIFO used
+by its TileLink clock-domain-crossing (CDC) path.
+
+The FIFO carries request and response payloads between the host and
+device clocks. Its synchronized control shall ensure that destination-domain
+logic observes the payload only after the source write is stable.
+
+Issue~\#13834~\cite{cdc-issue} documented the unqualified asynchronous path.
+The behavior was corrected in PR~\#13991~\cite{cdc-fix} and its fixing
+commit~\cite{cdc-fix-commit}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 2. Mechanism
+\subsection{Mechanism}
+
+% - Cause
+The asynchronous FIFO synchronized its valid indication into the read clock
+domain, but exposed the associated multi-bit payload without gating it with
+the synchronized valid signal.
+
+\begin{lstlisting}
+// Buggy code
+assign rdata_o = rdata_int;
+\end{lstlisting}
+
+Hence, a source-domain write may toggle the destination-visible payload
+during the synchronization delay. The fix drives the output net to zero while
+the synchronized valid is low.
+
+\begin{lstlisting}
+// Fixed code
+assign rdata_o = rvalid_o ? rdata_int : '0;
+\end{lstlisting}
+
+% - Minimal Repro
+The buggy and fixed SystemVerilog variants are provided separately
+\cite{bug3-sv-buggy,bug3-sv-fixed}, together with their Anvil versions
+\cite{bug3-anvil-buggy,bug3-anvil-fixed}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 3. Why it survived
+\subsection{Why It Survived}
+
+% - Why simulation, review, or lint did not catch it
+The pre-fix TL-UL testbench had no property for payload activity while
+\texttt{rvalid\_o} was low~\cite{cdc-parent,tlul-dv}. A CDC tool found this unchecked
+asynchronous path~\cite{cdc-issue,cdc-fix}.
+
+% - Was condition rare? property dont cover it? tool silent by construction?
+RTL simulation cannot model analog metastability. The fix changed two RTL
+files and added no test or assertion~\cite{cdc-fix}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 4. Class
+\subsection{Classification}
+
+% - Name of the class
+This bug can be classified as a \textbf{Clock-domain crossing and metastability}
+bug.
+
+% - Second instance of the same class (can be from section 4)
+The assignment gives the historical OpenCores UART16550 receive path
+as a second instance. It used the asynchronous receive input directly before
+commit \texttt{780ac1c} added synchronizer flops~\cite{uart16550-cdc}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 5. Detection
+\subsection{Detection}
+
+% - SVA property/lint to catch this class
+This type of bug is primarily detected by structural CDC analysis. A simulation
+or formal check can additionally require the destination payload to remain zero
+until its synchronized valid signal is asserted.
+
+The simulation implementation \cite{bug3-simulation-check}:
+
+\begin{lstlisting}
+assert (rvalid || rdata == '0)
+  else $fatal(1, "payload changed before valid");
+\end{lstlisting}
+
+The corresponding formal property is implemented in
+\cite{bug3-formal-check}:
+
+\begin{lstlisting}
+always_ff @(posedge f_rd_clk) begin
+  if (!f_rst_n)
+    f_past_valid <= 1'b0;
+  else
+    f_past_valid <= 1'b1;
+end
+
+property p_reset_before_past_valid;
+  @(posedge f_rd_clk)
+  !f_past_valid |-> !f_rst_n;
+endproperty: p_reset_before_past_valid
+
+property p_invalid_payload_is_zero;
+  @(posedge f_rd_clk) disable iff (!f_rst_n)
+  f_past_valid && !f_rvalid |-> (f_rdata == '0);
+endproperty: p_invalid_payload_is_zero
+
+assume property (p_reset_before_past_valid);
+
+a_invalid_payload_is_zero:
+  assert property (p_invalid_payload_is_zero);
+\end{lstlisting}
+
+% - What the above detection mechanism cost (false positives, runtime, required assumptions,
+%   or design constraints)
+CDC analysis requires correct clock constraints and reviewed waivers. The
+property is cheap but cannot model metastability, and the fix adds a multiplexer.
+
+Anvil rejects the buggy channel model because it overwrites a register while an
+outstanding send borrows it. The fixed model keeps the payload stable and is
+accepted~\cite{bug3-anvil-buggy,bug3-anvil-fixed,bug3-anvil-results}.
+
+% ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+% ----------------------------------------------------------------
+
+% Bug4
+\bugsection{4}{Delayed backpressure across a four-phase handshake}
+
+
+
+% -----------------------
+
+% 1. Instance
+\subsection{Instance}
+
+% - Design
+This bug also comes from OpenTitan~\cite{opentitan}, in the entropy conditioner
+and its SHA3/AES power-management handshake.
+
+The conditioner collects a fixed message and requests that AES halt before
+SHA3 processing to avoid a simultaneous power spike. Once this request begins,
+upstream entropy must be backpressured until processing completes and the
+four-phase request/acknowledge exchange returns to idle.
+
+The handshaking delay was corrected in PR~\#15854~\cite{handshake-fix} and its
+implementation commit~\cite{handshake-fix-commit}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 2. Mechanism
+\subsection{Mechanism}
+
+% - Cause
+The conditioner used a registered ready mask to avoid a combinational loop,
+but the mask remained open until the delayed SHA3 processing event.
+
+\begin{lstlisting}
+// Buggy code
+assign sha3_msg_end = sha3_process;
+mask_d = sha3_start ? 1'b1 : sha3_msg_end ? 1'b0 : mask_q;
+\end{lstlisting}
+
+Therefore, additional words could be accepted while the design waited for the
+AES acknowledgement. The fix stops accepting new input when
+\texttt{cs\_aes\_halt\_req} is asserted. It also waits for the acknowledgement
+to return low before allowing the next operation.
+
+\begin{lstlisting}
+// Fixed code
+assign sha3_msg_end = cs_aes_halt_req;
+mask_d = sha3_start ? 1'b1 : sha3_msg_end ? 1'b0 : mask_q;
+\end{lstlisting}
+
+% - Minimal Repro
+The buggy and fixed SystemVerilog variants are provided separately
+\cite{bug4-sv-buggy,bug4-sv-fixed}, together with their Anvil versions
+\cite{bug4-anvil-buggy,bug4-anvil-fixed}.
+
+% -----------------------
+
+
+
+% -----------------------
+
+% 3. Why it survived
+\subsection{Why It Survived}
+
+% - Why simulation, review, or lint did not catch it
+The UVM environment randomized AES handshake delays, but did not check that a
+request immediately stopped message acceptance
+\cite{handshake-parent,entropy-aes-agent,push-pull-agent,entropy-scoreboard}.
+
+% - Was condition rare? property dont cover it? tool silent by construction?
+The fix changed two RTL files and added no test or assertion
+\cite{handshake-fix-commit}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 4. Class
+\subsection{Classification}
+
+% - Name of the class
+This bug can be classified as a \textbf{Handshake and channel protocol} bug.
+
+% - Second instance of the same class (can be from section 4)
+The assignment already gives the Xilinx AXI-Lite demo slave as a second
+instance. It accepted a transfer using conditions beyond the interface's
+VALID-and-READY handshake~\cite{xilinx-axi-demo}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 5. Detection
+\subsection{Detection}
+
+% - SVA property/lint to catch this class
+This type of bug can be detected by checking that the halted request immediately
+blocks readiness. The same invariant can be checked in simulation or as
+a formal property.
+
+The simulation implementation \cite{bug4-simulation-check}:
+
+\begin{lstlisting}
+assert (accepted == 2 && !msg_ready)
+  else $fatal(1, "accepted input while waiting for ack");
+\end{lstlisting}
+
+The corresponding formal property is implemented in
+\cite{bug4-formal-check}:
+
+\begin{lstlisting}
+always_ff @(posedge f_clk) begin
+  if (!f_rst_n)
+    f_past_valid <= 1'b0;
+  else
+    f_past_valid <= 1'b1;
+end
+
+property p_reset_before_past_valid;
+  @(posedge f_clk)
+  !f_past_valid |-> !f_rst_n;
+endproperty: p_reset_before_past_valid
+
+property p_reset_remains_deasserted;
+  @(posedge f_clk)
+  f_past_valid |-> f_rst_n;
+endproperty: p_reset_remains_deasserted
+
+property p_request_applies_backpressure;
+  @(posedge f_clk) disable iff (!f_rst_n)
+  f_past_valid && f_aes_req |-> !f_msg_ready;
+endproperty: p_request_applies_backpressure
+
+property p_ack_eventually_asserts;
+  @(posedge f_clk) disable iff (!f_rst_n)
+  f_past_valid && f_aes_req |->
+    s_eventually f_aes_ack;
+endproperty: p_ack_eventually_asserts
+
+property p_ack_eventually_deasserts;
+  @(posedge f_clk) disable iff (!f_rst_n)
+  f_past_valid && f_aes_ack |->
+    s_eventually !f_aes_ack;
+endproperty: p_ack_eventually_deasserts
+
+property p_handshake_eventually_returns_idle;
+  @(posedge f_clk) disable iff (!f_rst_n)
+  f_past_valid && f_aes_req |->
+    s_eventually (!f_aes_req && !f_aes_ack);
+endproperty: p_handshake_eventually_returns_idle
+
+assume property (p_reset_before_past_valid);
+assume property (p_reset_remains_deasserted);
+assume property (p_ack_eventually_asserts);
+assume property (p_ack_eventually_deasserts);
+
+assert property (p_request_applies_backpressure);
+assert property (p_handshake_eventually_returns_idle);
+\end{lstlisting}
+
+% - What the above detection mechanism cost (false positives, runtime, required assumptions,
+%   or design constraints)
+Unlike the other formal checks in this report, the handshake-completion check
+is a liveness property. It requires fairness assumptions for the environment:
+ACK must eventually rise after a request and eventually fall. Without these
+assumptions, the tool can produce a counterexample in which the environment
+holds ACK forever. The formal setup is available here~\cite{bug4-sby-checks}.
+
+Liveness checks can be more expensive than safety checks. Weak fairness
+assumptions may prevent a proof. Assumptions that are too strong or unrealistic
+may make the result meaningless.
+
+Anvil rejects the buggy channel model because it overwrites a borrowed payload
+while the acknowledgement is outstanding. The fixed blocking-handshake model
+is accepted~\cite{bug4-anvil-buggy,bug4-anvil-fixed,bug4-anvil-results}.
+
+% ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+% ----------------------------------------------------------------
+% Bug5
+\bugsection{5}{CSR instruction incorrectly allowed to dual-issue}
+
+% -----------------------
+
+
+% -----------------------
+
+% 1. Instance
+\subsection{Instance}
+
+% - Design
+This bug comes from CVA6~\cite{cva6}, an open-source RISC-V processor, in its
+superscalar issue stage.
+
+The issue stage can dispatch two ordinary instructions if they are proven to
+be independent. However, CSR operations access privileged state and can
+redirect, trap, or change the context, so they must be serialized.
+
+The issue restriction was corrected in PR~\#2329~\cite{cva6-csr}, through the
+CSR-hazard commit~\cite{cva6-csr-hazard-commit} and CSR-port
+commit~\cite{cva6-csr-port-commit}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 2. Mechanism
+\subsection{Mechanism}
+
+% - Cause
+The issue-stage exclusion vector blocked only selected functional units when
+slot 0 contained a CSR instruction.
+
+\begin{lstlisting}
+// Buggy code
+CSR: begin
+  fus_busy[1].alu       = 1'b1;
+  fus_busy[1].ctrl_flow = 1'b1;
+  fus_busy[1].csr       = 1'b1;
+end
+\end{lstlisting}
+
+Therefore, other instruction classes could issue with a CSR, and a CSR could
+also reach the second lane. The fix blocks every functional unit from the
+second lane when slot 0 contains a CSR and ensures that a CSR uses only lane 0.
+
+\begin{lstlisting}
+// Fixed code
+fus_busy[1].csr = 1'b1;
+
+CSR: begin
+  fus_busy[1] = '1;
+end
+\end{lstlisting}
+
+% - Minimal Repro
+The buggy and fixed SystemVerilog variants are provided separately
+\cite{bug5-sv-buggy,bug5-sv-fixed}, together with their Anvil versions
+\cite{bug5-anvil-buggy,bug5-anvil-fixed}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 3. Why it survived
+\subsection{Why It Survived}
+
+% - Why simulation, review, or lint did not catch it
+The PR does not state how the bug was found. A visible failure requires a CSR
+to issue beside and affect another instruction.
+
+
+
+% - Was condition rare? property dont cover it? tool silent by construction?
+CVA6 had CSR tests and an RVFI/UVM scoreboard
+\cite{cva6-csr-tests,cva6-verification-scoreboard}. However, its default CI
+target disabled superscalar issue and could not exercise the bug
+\cite{cva6-parent,cva6-ci,cva6-config}.
+
+Both fixes changed only \texttt{issue\_read\_operands.sv} and added
+no test or assertion~\cite{cva6-csr-hazard-commit,cva6-csr-port-commit}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 4. Class
+\subsection{Classification}
+
+% - Name of the class
+This bug can be classified as a \textbf{Pipeline control, issue hazards, and
+speculation} bug.
+
+% - Second instance of the same class (can be from section 4)
+The assignment gives Intel errata SKL150/KBL095 as a second instance.
+It reports unpredictable behavior when short loops mix AH/BH/CH/DH with the
+corresponding wider register while both logical processors are active
+\cite{intel-errata}.
+
+% -----------------------
+
+
+% -----------------------
+
+% 5. Detection
+\subsection{Detection}
+
+% - SVA property/lint to catch this class
+This type of bug can be detected by checking that a CSR instruction never
+issues beside another instruction and never uses the second issue lane. The
+invariant can be checked in simulation or as a formal property.
+
+The simulation implementation \cite{bug5-simulation-check}:
+
+\begin{lstlisting}
+assert (!issue1)
+  else $fatal(1, "instruction issued beside CSR");
+\end{lstlisting}
+
+The corresponding formal properties are implemented in
+\cite{bug5-formal-check}:
+
+\begin{lstlisting}
+property p_csr_is_serialized;
+  @(posedge f_clk)
+  f_issue0 && f_fu0 == CSR |-> !f_issue1;
+endproperty: p_csr_is_serialized
+
+property p_csr_uses_port_zero;
+  @(posedge f_clk)
+  !(f_issue1 && f_fu1 == CSR);
+endproperty: p_csr_uses_port_zero
+\end{lstlisting}
+
+% - What the above detection mechanism cost (false positives, runtime, required assumptions,
+%   or design constraints)
+This pessimistic serialization avoids the bug, but it may be too restrictive
+and limit performance. However, CSRs are generally rare and uncommon in hot
+loops. The check itself is inexpensive.
+
+Anvil's checker generally cannot detect this type of bug because it requires
+high-level system reasoning.
+It accepts both versions, so CSR serialization must be
+checked separately~\cite{bug5-anvil-buggy,bug5-anvil-fixed,
+bug5-anvil-results}.
+
+% ----------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+% ----------------------------------------------------------------
+% Synthesis
+\onecolumn
+\section{Synthesis}
+\titlespacing*{\subsection}{0pt}{1.0ex plus 0.3ex minus 0.2ex}{0.35ex}
+
+\begingroup
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.0}
+\begin{tabularx}{\textwidth}{c p{0.20\textwidth} X p{0.20\textwidth} p{0.16\textwidth}}
+\hline
+\textbf{Bug} & \textbf{Class} & \textbf{Comments} &
+\textbf{Best technique} & \textbf{Anvil ability} \\
+\hline
+1 & Reset and initialization &
+The loop initializes only a part of a parameterized memory. &
+Four-state simulation or a formal completeness property over every entry. &
+Not detected. The generated RTL masks the difference. \\
+\hline
+
+2 & Buffering, FIFOs, and flow control &
+An empty software-visible FIFO exposes its retained payload. &
+Empty=>zero assertion. &
+Not detected. \\
+\hline
+
+3 & Clock-domain crossing and metastability &
+An asynchronous payload is visible before its synchronized valid signal. &
+Structural CDC analysis plus an invalid=>zero assertion. &
+Detected when modeled as a channel-lifetime violation. \\
+\hline
+
+4 & Handshake and channel protocol &
+Delayed backpressure accepts extra input while acknowledgement is pending. &
+Protocol assertions with continuous input and delayed ACK. &
+Detected when modeled as a channel-lifetime violation. \\
+\hline
+
+5 & Pipeline control and issue hazards &
+A CSR can issue beside another instruction or on the wrong port. &
+Issue serialization assertions and formal instruction pairing. &
+Not detected. \\
+\hline
+\end{tabularx}
+\par
+\endgroup
+
+% ------------------
+
+
+\subsection{Anvil Modeling Requirement}
+
+For Bugs 3 and 4, Anvil rejects the buggy versions when the designs are
+correctly expressed using its channel model
+\cite{bug3-anvil-buggy,bug4-anvil-buggy}. The corrected versions pass the
+compiler~\cite{bug3-anvil-fixed,bug4-anvil-fixed}. However, code that models
+the channel incorrectly can still pass Anvil's checks while remaining
+functionally wrong~\cite{bug3-anvil-semantic,bug4-anvil-semantic}.
+
+% ------------------
+
+\subsection{Simulation}
+
+The simulations use the open-source SystemVerilog/Verilog simulator
+Verilator 5.051, revision \texttt{7d3021c34}~\cite{verilator-version}.
+
+Verilator is a two-state simulator. It is also cycle-based, although that is
+not relevant here. 
+Hence, uninitialized values are not preserved as \texttt{X}, so both Bug~1 versions pass.
+
+
+% ------------------
+
+\subsection{Model Checking}
+
+The formal checks use the open-source SymbiYosys tool, version 0.67,
+revision \texttt{fea6e46}~\cite{symbiyosys-version}. BMC finds
+counterexamples in the buggy versions. The fixed versions use $k$-induction
+for Bug~1 and PDR for Bugs~2--5. Bug~4 also checks liveness with
+\texttt{suprove}.
+% ------------------
+
+\subsection{CDC}
+
+The structural CDC check for Bug~3 was not performed because no CDC tool was
+available.
+
+% ------------------
+
+\subsection{Selected Projects}
+
+The selected projects are Corundum~\cite{corundum},
+OpenTitan~\cite{opentitan}, and CVA6~\cite{cva6}.
+
+\begin{itemize}[nosep]
+\item OpenTitan includes a UVM and formal-verification suite, and the selected bugs have
+  clear issue-PR-commit links.
+\item CVA6 includes processor, ISA, and UVM verification infrastructure.
+\item Corundum uses cocotb/pytest regressions and does not include UVM or
+  formal checks.
+\end{itemize}
+
+\subsection{Test Matrix}
+
+\begingroup
+\centering
+\tiny
+\setlength{\tabcolsep}{0.6pt}
+\renewcommand{\arraystretch}{1.05}
+\begin{tabularx}{\textwidth}{c *{13}{>{\raggedright\arraybackslash}X}}
+\hline
+\textbf{Bug} &
+\shortstack{\textbf{Sim/SV}\\\textbf{buggy}\\\cite{matrix-sv-sim}} &
+\shortstack{\textbf{Sim/SV}\\\textbf{fixed}\\\cite{matrix-sv-sim}} &
+\shortstack{\textbf{Formal/SV}\\\textbf{buggy}\\\cite{matrix-sv-formal}} &
+\shortstack{\textbf{Formal/SV}\\\textbf{fixed}\\\cite{matrix-sv-formal}} &
+\shortstack{\textbf{Compile}\\\textbf{Anvil}\\\textbf{buggy}\\\cite{matrix-anvil-sources}} &
+\shortstack{\textbf{Compile}\\\textbf{Anvil}\\\textbf{semantic}\\\cite{matrix-anvil-semantic-sources}} &
+\shortstack{\textbf{Compile}\\\textbf{Anvil}\\\textbf{fixed}\\\cite{matrix-anvil-sources}} &
+\shortstack{\textbf{Sim/Anvil}\\\textbf{buggy}\\\cite{matrix-anvil-sim}} &
+\shortstack{\textbf{Sim/Anvil}\\\textbf{semantic}\\\cite{matrix-anvil-sim}} &
+\shortstack{\textbf{Sim/Anvil}\\\textbf{fixed}\\\cite{matrix-anvil-sim}} &
+\shortstack{\textbf{Formal}\\\textbf{Anvil}\\\textbf{buggy}\\\cite{matrix-anvil-formal}} &
+\shortstack{\textbf{Formal}\\\textbf{Anvil}\\\textbf{semantic}\\\cite{matrix-anvil-formal}} &
+\shortstack{\textbf{Formal}\\\textbf{Anvil}\\\textbf{fixed}\\\cite{matrix-anvil-formal}} \\
+\hline
+1 & PASS & PASS &
+Safety; BMC; Z3; d2; FAIL/SAT &
+Safety; BMC+$k$-ind.; Z3; d2; PASS &
+PASS & --- & PASS &
+PASS (masked) & --- & PASS &
+Safety; BMC; Z3; d6; PASS (masked) & --- &
+Safety; BMC+$k$-ind.; Z3; d6; PASS \\
+\hline
+
+2 & FAIL & PASS &
+Safety; BMC; Z3; d8; FAIL/SAT &
+Safety; PDR; ABC; PASS &
+PASS & --- & PASS &
+FAIL & --- & PASS &
+Safety; BMC; Z3; d12; FAIL/SAT & --- &
+Safety; PDR; ABC; PASS \\
+\hline
+
+3 & FAIL & PASS &
+Safety; BMC; Z3; d8; FAIL/SAT &
+Safety; PDR; ABC; PASS &
+REJECT & PASS & PASS &
+Not run & FAIL & PASS &
+Not run & Safety; BMC; Z3; d12; FAIL/SAT &
+Safety; PDR; ABC; PASS \\
+\hline
+
+4-S & FAIL & PASS &
+Safety; BMC; Z3; d10; FAIL/SAT &
+Safety; PDR; ABC; PASS &
+REJECT & PASS & PASS &
+Not run & FAIL & PASS &
+Not run & Safety; BMC; Z3; d16; FAIL/SAT &
+Safety; PDR; ABC; PASS \\
+\hline
+
+4-L & --- & --- &
+Live; \texttt{suprove}; PASS &
+Live; \texttt{suprove}; PASS &
+--- & --- & --- & --- & --- & --- &
+--- & --- & Live; \texttt{suprove}; PASS \\
+\hline
+
+5 & FAIL & PASS &
+Safety; BMC; Z3; d2; FAIL/SAT &
+Safety; PDR; ABC; PASS &
+PASS & --- & PASS &
+FAIL & --- & PASS &
+Safety; BMC; Z3; d12; FAIL/SAT & --- &
+Safety; PDR; ABC; PASS \\
+\hline
+\end{tabularx}
+\par
+\endgroup
+% ----------------------------------------------------------------
+
+
+\newpage
+
+% References
+\titlespacing*{\subsection}{0pt}{1.8ex plus 0.5ex minus 0.2ex}{0.7ex}
+\twocolumn
+\begin{thebibliography}{99}
+
+\bibitem{matrix-sv-sim}
+SystemVerilog simulation environments:
+\href{run:../src/bug1}{\path{src/bug1}},
+\href{run:../src/bug2}{\path{src/bug2}},
+\href{run:../src/bug3}{\path{src/bug3}},
+\href{run:../src/bug4}{\path{src/bug4}},
+\href{run:../src/bug5}{\path{src/bug5}}.
+
+\bibitem{matrix-sv-formal}
+SystemVerilog formal environments:
+\href{run:../src/bug1/formal}{\path{src/bug1/formal}},
+\href{run:../src/bug2/formal}{\path{src/bug2/formal}},
+\href{run:../src/bug3/formal}{\path{src/bug3/formal}},
+\href{run:../src/bug4/formal}{\path{src/bug4/formal}},
+\href{run:../src/bug5/formal}{\path{src/bug5/formal}}.
+
+\bibitem{matrix-anvil-sources}
+Buggy and fixed Anvil sources:
+\href{run:../src/bug1/rtl}{\path{src/bug1/rtl}},
+\href{run:../src/bug2/rtl}{\path{src/bug2/rtl}},
+\href{run:../src/bug3/rtl}{\path{src/bug3/rtl}},
+\href{run:../src/bug4/rtl}{\path{src/bug4/rtl}},
+\href{run:../src/bug5/rtl}{\path{src/bug5/rtl}}.
+
+\bibitem{matrix-anvil-semantic-sources}
+Anvil semantic-bug sources:
+\href{run:../src/bug3/rtl/semantic_bug.anvil}{\path{src/bug3/rtl/semantic_bug.anvil}},
+\href{run:../src/bug4/rtl/semantic_bug.anvil}{\path{src/bug4/rtl/semantic_bug.anvil}}.
+
+\bibitem{matrix-anvil-sim}
+Generated-Anvil simulation testbenches:
+\href{run:../src/bug1/tb/anvil_tb.sv}{\path{src/bug1/tb/anvil_tb.sv}},
+\href{run:../src/bug2/tb/anvil_tb.sv}{\path{src/bug2/tb/anvil_tb.sv}},
+\href{run:../src/bug3/tb/anvil_tb.sv}{\path{src/bug3/tb/anvil_tb.sv}},
+\href{run:../src/bug4/tb/anvil_tb.sv}{\path{src/bug4/tb/anvil_tb.sv}}, and
+\href{run:../src/bug5/tb/anvil_tb.sv}{\path{src/bug5/tb/anvil_tb.sv}}.
+
+\bibitem{matrix-anvil-formal}
+Generated-Anvil formal configurations, properties, and logs:
+\href{run:../src/bug1/formal}{\path{src/bug1/formal}},
+\href{run:../src/bug2/formal}{\path{src/bug2/formal}},
+\href{run:../src/bug3/formal}{\path{src/bug3/formal}},
+\href{run:../src/bug4/formal}{\path{src/bug4/formal}},
+\href{run:../src/bug5/formal}{\path{src/bug5/formal}}.
+
+\bibitem{verilator-version}
+\href{https://github.com/verilator/verilator/commit/7d3021c34d0f26a88e8b1107c50ceb2d896689b3}{Verilator revision
+\path{7d3021c34d0f26a88e8b1107c50ceb2d896689b3}}.
+
+\bibitem{symbiyosys-version}
+\href{https://github.com/YosysHQ/sby/commit/fea6e467d067b3ea84b6b5ac08cd48beb59f0d42}{SymbiYosys version 0.67, revision
+\path{fea6e467d067b3ea84b6b5ac08cd48beb59f0d42}}.
+
+\bibitem{corundum}
+\href{https://github.com/corundum/corundum}{Corundum source repository}.
+
+\bibitem{queue-manager-src}
+\href{https://github.com/corundum/corundum/blob/0560f98e799d741d62522e61bf23321fc3f2880b/fpga/common/rtl/queue_manager.v}{Corundum \texttt{queue\_manager} source}.
+
+\bibitem{cpl-queue-manager-src}
+\href{https://github.com/corundum/corundum/blob/0560f98e799d741d62522e61bf23321fc3f2880b/fpga/common/rtl/cpl_queue_manager.v}{Corundum \texttt{cpl\_queue\_manager} source}.
+
+\bibitem{tx-scheduler-src}
+\href{https://github.com/corundum/corundum/blob/0560f98e799d741d62522e61bf23321fc3f2880b/fpga/common/rtl/tx_scheduler_rr.v}{Corundum \texttt{tx\_scheduler\_rr} source}.
+
+\bibitem{queue-manager-test}
+\href{https://github.com/corundum/corundum/blob/0f82e0c5f3b9fa9a15e99d6e43b08b3b4dff7909/fpga/common/tb/queue_manager/test_queue_manager.py}{Corundum pre-fix \texttt{queue\_manager} regression test}.
+
+\bibitem{cpl-queue-manager-test}
+\href{https://github.com/corundum/corundum/blob/0f82e0c5f3b9fa9a15e99d6e43b08b3b4dff7909/fpga/common/tb/cpl_queue_manager/test_cpl_queue_manager.py}{Corundum pre-fix \texttt{cpl\_queue\_manager} regression test}.
+
+\bibitem{corundum-intro}
+\href{https://github.com/corundum/corundum/commit/0560f98e799d741d62522e61bf23321fc3f2880b}{Corundum: Support more than 4k queues}.
+
+\bibitem{corundum-fix}
+\href{https://github.com/corundum/corundum/pull/96}{Corundum PR~\#96: Correct queue-memory initialization}.
+
+\bibitem{corundum-fix-commit}
+\href{https://github.com/corundum/corundum/commit/7bc1ecc711f3d4fce55290e0ed6d94a549cc2528}{Corundum fixing commit \texttt{7bc1ecc}}.
+
+\bibitem{corundum-parent}
+\href{https://github.com/corundum/corundum/commit/0f82e0c5f3b9fa9a15e99d6e43b08b3b4dff7909}{Corundum pre-fix parent commit \texttt{0f82e0c}}.
+
+\bibitem{quartus}
+\href{https://www.intel.com/content/www/us/en/docs/programmable/683472/24-3/design-suite-overview.html}{Intel Quartus Prime FPGA design software}.
+
+\bibitem{rocket-init}
+\href{https://github.com/chipsalliance/rocket-chip/commit/1cb2d1d7b7191aff8f8004b9b64a5d908c96fd6b}{Rocket Chip: Initialize all SRAMs to avoid X propagation}.
+
+\bibitem{opentitan}
+\href{https://github.com/lowRISC/opentitan}{OpenTitan source repository}.
+
+\bibitem{fifo-issue}
+\href{https://github.com/lowRISC/opentitan/issues/2315}{OpenTitan issue~\#2315: Stale data from empty UART RX FIFO}.
+
+\bibitem{fifo-fix}
+\href{https://github.com/lowRISC/opentitan/pull/2420}{OpenTitan PR~\#2420: Fix empty-FIFO stale data}.
+
+\bibitem{fifo-fix-commit}
+\href{https://github.com/lowRISC/opentitan/commit/9ac2b15f162cc4bf5e6e4226ae659c9d4225e1d0}{OpenTitan merged commit \texttt{9ac2b15}}.
+
+\bibitem{fifo-parent}
+\href{https://github.com/lowRISC/opentitan/commit/0408a4e7564c0fde1bf7dca87e8c8e1bce587c75}{OpenTitan stale-FIFO pre-fix parent commit \texttt{0408a4e}}.
+
+\bibitem{uart-testplan}
+\href{https://github.com/lowRISC/opentitan/blob/0408a4e7564c0fde1bf7dca87e8c8e1bce587c75/hw/ip/uart/data/uart_testplan.hjson}{OpenTitan pre-fix UART test plan}.
+
+\bibitem{uart-scoreboard}
+\href{https://github.com/lowRISC/opentitan/blob/0408a4e7564c0fde1bf7dca87e8c8e1bce587c75/hw/ip/uart/dv/env/uart_scoreboard.sv}{OpenTitan pre-fix UART scoreboard}.
+
+\bibitem{cdc-issue}
+\href{https://github.com/lowRISC/opentitan/issues/13834}{OpenTitan issue~\#13834: W\_MASYNC in spi\_device}.
+
+\bibitem{cdc-fix}
+\href{https://github.com/lowRISC/opentitan/pull/13991}{OpenTitan PR~\#13991: Qualify asynchronous-FIFO output}.
+
+\bibitem{cdc-fix-commit}
+\href{https://github.com/lowRISC/opentitan/commit/e0ba6cdb527c02b7e85dff048a8f168a6e166999}{OpenTitan CDC-fix commit \texttt{e0ba6cd}}.
+
+\bibitem{cdc-parent}
+\href{https://github.com/lowRISC/opentitan/commit/592eaf648de3fdc0803761f9fb31390012587573}{OpenTitan CDC pre-fix parent commit \texttt{592eaf6}}.
+
+\bibitem{tlul-dv}
+\href{https://github.com/lowRISC/opentitan/blob/592eaf648de3fdc0803761f9fb31390012587573/hw/ip/tlul/doc/dv/index.md}{OpenTitan pre-fix TL-UL verification environment}.
+
+\bibitem{handshake-fix}
+\href{https://github.com/lowRISC/opentitan/pull/15854}{OpenTitan PR~\#15854: Fix handshaking delay}.
+
+\bibitem{handshake-fix-commit}
+\href{https://github.com/lowRISC/opentitan/commit/cd1b6131548f8bdb86e2f10904d0b8551db31d50}{OpenTitan handshake-fix commit \texttt{cd1b613}}.
+
+\bibitem{handshake-parent}
+\href{https://github.com/lowRISC/opentitan/commit/78944e3d4b0af31133ccca88395de4a74d0c6b8b}{OpenTitan handshake pre-fix parent commit \texttt{78944e3}}.
+
+\bibitem{entropy-aes-agent}
+\href{https://github.com/lowRISC/opentitan/blob/78944e3d4b0af31133ccca88395de4a74d0c6b8b/hw/ip/entropy_src/dv/env/entropy_src_env.sv}{OpenTitan pre-fix entropy-source AES handshake agent}.
+
+\bibitem{push-pull-agent}
+\href{https://github.com/lowRISC/opentitan/blob/78944e3d4b0af31133ccca88395de4a74d0c6b8b/hw/dv/sv/push_pull_agent/push_pull_agent_cfg.sv}{OpenTitan pre-fix randomized handshake-delay configuration}.
+
+\bibitem{entropy-scoreboard}
+\href{https://github.com/lowRISC/opentitan/blob/78944e3d4b0af31133ccca88395de4a74d0c6b8b/hw/ip/entropy_src/dv/env/entropy_src_scoreboard.sv}{OpenTitan pre-fix entropy-source scoreboard}.
+
+\bibitem{cva6}
+\href{https://github.com/openhwfoundation/cva6}{CVA6 source repository}.
+
+\bibitem{cva6-csr}
+\href{https://github.com/openhwfoundation/cva6/pull/2329}{CVA6 PR~\#2329: Do not issue CSR with another instruction}.
+
+\bibitem{cva6-csr-hazard-commit}
+\href{https://github.com/openhwfoundation/cva6/commit/92e418a507134ef4cb95925feba4a72ff7f845cb}{CVA6 CSR-hazard commit \texttt{92e418a}}.
+
+\bibitem{cva6-csr-port-commit}
+\href{https://github.com/openhwfoundation/cva6/commit/827daa09f413950e28e4f4cb84843e9d8e41a4c5}{CVA6 CSR-port commit \texttt{827daa0}}.
+
+\bibitem{cva6-parent}
+\href{https://github.com/openhwfoundation/cva6/commit/67dba2cad376de0190bb5564f1e229de73e86ef1}{CVA6 pre-fix parent commit \texttt{67dba2c}}.
+
+\bibitem{cva6-ci}
+\href{https://github.com/openhwfoundation/cva6/blob/67dba2cad376de0190bb5564f1e229de73e86ef1/.gitlab-ci.yml}{CVA6 pre-fix CI configuration}.
+
+\bibitem{cva6-config}
+\href{https://github.com/openhwfoundation/cva6/blob/67dba2cad376de0190bb5564f1e229de73e86ef1/core/include/cv32a65x_config_pkg.sv}{CVA6 pre-fix \texttt{cv32a65x} configuration}.
+
+\bibitem{cva6-csr-tests}
+\href{https://github.com/openhwfoundation/cva6/blob/67dba2cad376de0190bb5564f1e229de73e86ef1/verif/regress/dv-riscv-csr-access-test.sh}{CVA6 pre-fix CSR regression}.
+
+\bibitem{cva6-verification-scoreboard}
+\href{https://github.com/openhwfoundation/cva6/blob/67dba2cad376de0190bb5564f1e229de73e86ef1/verif/env/uvme/uvme_cva6_sb.sv}{CVA6 pre-fix RVFI/UVM scoreboard}.
+
+\bibitem{uart16550-stale}
+\href{https://github.com/freecores/uart16550/blob/master/rtl/verilog/uart_regs.v}{OpenCores UART16550 receive-FIFO RTL}.
+
+\bibitem{uart16550-cdc}
+\href{https://github.com/freecores/uart16550/commit/780ac1c1252506fe719f306f6c30364a8b1e01eb}{OpenCores UART16550 commit \texttt{780ac1c}: add receive-input synchronizer flops}.
+
+\bibitem{intel-errata}
+\href{https://www.intel.com/content/www/us/en/content-details/334408/}{Intel processor specification update: SKL150/KBL095}.
+
+\bibitem{xilinx-axi-demo}
+\href{https://zipcpu.com/formal/2019/05/13/axifull.html}{D. Gisselquist,
+``Examining Xilinx's AXI demonstration core.''}
+
+\bibitem{anvil-paper}
+J. Z. Yu, A. R. Jha, U. Mathur, T. E. Carlson, and P. Saxena,
+\href{https://arxiv.org/abs/2503.19447}{``Anvil: A General-Purpose Timing-Safe Hardware Description Language,''}
+ASPLOS, 2026.
+
+\bibitem{anvil-github}
+\href{https://github.com/AnvilHDL/anvil}{Anvil compiler source repository}.
+
+% 2. Repro/
+\bibitem{bug1-sv-buggy}
+\href{run:../src/bug1/rtl/buggy.sv}{\path{src/bug1/rtl/buggy.sv}}.
+
+\bibitem{bug1-anvil-buggy}
+\href{run:../src/bug1/rtl/buggy.anvil}{\path{src/bug1/rtl/buggy.anvil}}.
+
+\bibitem{bug1-sv-fixed}
+\href{run:../src/bug1/rtl/fixed.sv}{\path{src/bug1/rtl/fixed.sv}}.
+
+\bibitem{bug1-anvil-fixed}
+\href{run:../src/bug1/rtl/fixed.anvil}{\path{src/bug1/rtl/fixed.anvil}}.
+
+\bibitem{bug1-simulation-check}
+\href{run:../src/bug1/tb/tb.sv}{\path{src/bug1/tb/tb.sv}}.
+
+\bibitem{bug1-formal-check}
+\href{run:../src/bug1/formal/properties.sv}{\path{src/bug1/formal/properties.sv}}.
+
+\bibitem{bug1-anvil-results}
+\href{run:../src/bug1/formal/results/logs/anvil_compile_buggy.log}{\path{src/bug1/formal/results/logs/anvil_compile_buggy.log}};
+\href{run:../src/bug1/formal/results/logs/anvil_compile_fixed.log}{\path{src/bug1/formal/results/logs/anvil_compile_fixed.log}};
+\href{run:../src/bug1/formal/results/logs/anvil_buggy.log}{\path{src/bug1/formal/results/logs/anvil_buggy.log}};
+\href{run:../src/bug1/formal/results/logs/anvil_fixed.log}{\path{src/bug1/formal/results/logs/anvil_fixed.log}}.
+
+\bibitem{bug2-sv-buggy}
+\href{run:../src/bug2/rtl/buggy.sv}{\path{src/bug2/rtl/buggy.sv}}.
+
+\bibitem{bug2-sv-fixed}
+\href{run:../src/bug2/rtl/fixed.sv}{\path{src/bug2/rtl/fixed.sv}}.
+
+\bibitem{bug2-anvil-buggy}
+\href{run:../src/bug2/rtl/buggy.anvil}{\path{src/bug2/rtl/buggy.anvil}}.
+
+\bibitem{bug2-anvil-fixed}
+\href{run:../src/bug2/rtl/fixed.anvil}{\path{src/bug2/rtl/fixed.anvil}}.
+
+\bibitem{bug2-simulation-check}
+\href{run:../src/bug2/tb/tb.sv}{\path{src/bug2/tb/tb.sv}}.
+
+\bibitem{bug2-formal-check}
+\href{run:../src/bug2/formal/properties.sv}{\path{src/bug2/formal/properties.sv}}.
+
+\bibitem{bug2-anvil-results}
+\href{run:../src/bug2/formal/results/logs/anvil_compile_buggy.log}{\path{src/bug2/formal/results/logs/anvil_compile_buggy.log}};
+\href{run:../src/bug2/formal/results/logs/anvil_compile_fixed.log}{\path{src/bug2/formal/results/logs/anvil_compile_fixed.log}};
+\href{run:../src/bug2/formal/results/logs/anvil_buggy.log}{\path{src/bug2/formal/results/logs/anvil_buggy.log}};
+\href{run:../src/bug2/formal/results/logs/anvil_fixed.log}{\path{src/bug2/formal/results/logs/anvil_fixed.log}}.
+
+\bibitem{bug3-sv-buggy}
+\href{run:../src/bug3/rtl/buggy.sv}{\path{src/bug3/rtl/buggy.sv}}.
+
+\bibitem{bug3-sv-fixed}
+\href{run:../src/bug3/rtl/fixed.sv}{\path{src/bug3/rtl/fixed.sv}}.
+
+\bibitem{bug3-anvil-buggy}
+\href{run:../src/bug3/rtl/buggy.anvil}{\path{src/bug3/rtl/buggy.anvil}}.
+
+\bibitem{bug3-anvil-fixed}
+\href{run:../src/bug3/rtl/fixed.anvil}{\path{src/bug3/rtl/fixed.anvil}}.
+
+\bibitem{bug3-anvil-semantic}
+\href{run:../src/bug3/rtl/semantic_bug.anvil}{\path{src/bug3/rtl/semantic_bug.anvil}}.
+
+\bibitem{bug3-simulation-check}
+\href{run:../src/bug3/tb/tb.sv}{\path{src/bug3/tb/tb.sv}}.
+
+\bibitem{bug3-formal-check}
+\href{run:../src/bug3/formal/properties.sv}{\path{src/bug3/formal/properties.sv}}.
+
+\bibitem{bug3-anvil-results}
+\href{run:../src/bug3/formal/results/logs/anvil_compile_buggy.log}{\path{src/bug3/formal/results/logs/anvil_compile_buggy.log}};
+\href{run:../src/bug3/formal/results/logs/anvil_compile_semantic_bug.log}{\path{src/bug3/formal/results/logs/anvil_compile_semantic_bug.log}};
+\href{run:../src/bug3/formal/results/logs/anvil_compile_fixed.log}{\path{src/bug3/formal/results/logs/anvil_compile_fixed.log}};
+\href{run:../src/bug3/formal/results/logs/anvil_semantic_bug.log}{\path{src/bug3/formal/results/logs/anvil_semantic_bug.log}};
+\href{run:../src/bug3/formal/results/logs/anvil_fixed.log}{\path{src/bug3/formal/results/logs/anvil_fixed.log}}.
+
+\bibitem{bug4-sv-buggy}
+\href{run:../src/bug4/rtl/buggy.sv}{\path{src/bug4/rtl/buggy.sv}}.
+
+\bibitem{bug4-sv-fixed}
+\href{run:../src/bug4/rtl/fixed.sv}{\path{src/bug4/rtl/fixed.sv}}.
+
+\bibitem{bug4-anvil-buggy}
+\href{run:../src/bug4/rtl/buggy.anvil}{\path{src/bug4/rtl/buggy.anvil}}.
+
+\bibitem{bug4-anvil-fixed}
+\href{run:../src/bug4/rtl/fixed.anvil}{\path{src/bug4/rtl/fixed.anvil}}.
+
+\bibitem{bug4-anvil-semantic}
+\href{run:../src/bug4/rtl/semantic_bug.anvil}{\path{src/bug4/rtl/semantic_bug.anvil}}.
+
+\bibitem{bug4-simulation-check}
+\href{run:../src/bug4/tb/tb.sv}{\path{src/bug4/tb/tb.sv}}.
+
+\bibitem{bug4-formal-check}
+\href{run:../src/bug4/formal/properties.sv}{\path{src/bug4/formal/properties.sv}}.
+
+\bibitem{bug4-sby-checks}
+\href{run:../src/bug4/formal/sby_properties.sv}{\path{src/bug4/formal/sby_properties.sv}};
+\href{run:../src/bug4/formal.sby}{\path{src/bug4/formal.sby}};
+\href{run:../src/bug4/formal_live.sby}{\path{src/bug4/formal_live.sby}}.
+
+\bibitem{bug4-anvil-results}
+\href{run:../src/bug4/formal/results/logs/anvil_compile_buggy.log}{\path{src/bug4/formal/results/logs/anvil_compile_buggy.log}};
+\href{run:../src/bug4/formal/results/logs/anvil_compile_semantic_bug.log}{\path{src/bug4/formal/results/logs/anvil_compile_semantic_bug.log}};
+\href{run:../src/bug4/formal/results/logs/anvil_compile_fixed.log}{\path{src/bug4/formal/results/logs/anvil_compile_fixed.log}};
+\href{run:../src/bug4/formal/results/logs/anvil_semantic_bug.log}{\path{src/bug4/formal/results/logs/anvil_semantic_bug.log}};
+\href{run:../src/bug4/formal/results/logs/anvil_fixed.log}{\path{src/bug4/formal/results/logs/anvil_fixed.log}}.
+
+\bibitem{bug5-sv-buggy}
+\href{run:../src/bug5/rtl/buggy.sv}{\path{src/bug5/rtl/buggy.sv}}.
+
+\bibitem{bug5-sv-fixed}
+\href{run:../src/bug5/rtl/fixed.sv}{\path{src/bug5/rtl/fixed.sv}}.
+
+\bibitem{bug5-anvil-buggy}
+\href{run:../src/bug5/rtl/buggy.anvil}{\path{src/bug5/rtl/buggy.anvil}}.
+
+\bibitem{bug5-anvil-fixed}
+\href{run:../src/bug5/rtl/fixed.anvil}{\path{src/bug5/rtl/fixed.anvil}}.
+
+\bibitem{bug5-simulation-check}
+\href{run:../src/bug5/tb/tb.sv}{\path{src/bug5/tb/tb.sv}}.
+
+\bibitem{bug5-formal-check}
+\href{run:../src/bug5/formal/properties.sv}{\path{src/bug5/formal/properties.sv}}.
+
+\bibitem{bug5-anvil-results}
+\href{run:../src/bug5/formal/results/logs/anvil_compile_buggy.log}{\path{src/bug5/formal/results/logs/anvil_compile_buggy.log}};
+\href{run:../src/bug5/formal/results/logs/anvil_compile_fixed.log}{\path{src/bug5/formal/results/logs/anvil_compile_fixed.log}};
+\href{run:../src/bug5/formal/results/logs/anvil_buggy.log}{\path{src/bug5/formal/results/logs/anvil_buggy.log}};
+\href{run:../src/bug5/formal/results/logs/anvil_fixed.log}{\path{src/bug5/formal/results/logs/anvil_fixed.log}}.
+\end{thebibliography}
+
+\end{document}

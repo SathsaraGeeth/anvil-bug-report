@@ -1,0 +1,21 @@
+Reading .sby configuration from stdin:
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] Removing directory '/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed'.
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug4/rtl/generated/fixed.sv' to '/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed/src/fixed.sv'.
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug4/formal/anvil_live_properties.sv' to '/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed/src/anvil_live_properties.sv'.
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] engine_0: aiger suprove
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] base: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] base: Warning: Wire handshake_anvil_live_properties.\clk is used but has no driver.
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] base: finished (returncode=0)
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] prep: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed/model; yosys -ql design_prep.log design_prep.ys"
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] prep: Warning: Wire handshake_anvil_live_properties.\clk is used but has no driver.
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] prep: finished (returncode=0)
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] aig: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed/model; yosys -ql design_aiger.log design_aiger.ys"
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] aig: finished (returncode=0)
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] engine_0: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed; suprove +simple_liveness model/design_aiger.aig"
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] engine_0: finished (returncode=0)
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] engine_0: Status returned by engine: PASS
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] summary: engine_0 (aiger suprove) returned PASS
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] summary: engine_0 did not produce any traces
+SBY  2:26:31 [/tmp/rtl_bugs_matrix_oBbrad/live_anvil_bug4_fixed] DONE (PASS, rc=0)

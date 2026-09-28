@@ -1,0 +1,104 @@
+SELECTED
+---
+
+Corundum partial queue-memory initialization
+Reason: Clear error with a small reproducer.
+https://github.com/corundum/corundum/commit/0560f98e799d741d62522e61bf23321fc3f2880b
+https://github.com/corundum/corundum/commit/7bc1ecc711f3d4fce55290e0ed6d94a549cc2528
+
+OpenTitan stale data from empty FIFO
+Reason: A different type of problem from a traditional RTL bug.
+https://github.com/lowRISC/opentitan/issues/2315
+https://github.com/lowRISC/opentitan/pull/2420
+
+OpenTitan asynchronous-FIFO invalid-data CDC exposure
+Reason: CDC qualification failure with a small reproducer.
+https://github.com/lowRISC/opentitan/issues/13834
+https://github.com/lowRISC/opentitan/pull/13991
+
+OpenTitan entropy-conditioner handshake delay
+Reason: Clear delayed-backpressure and four-phase-handshake failure.
+https://github.com/lowRISC/opentitan/pull/15854
+
+CVA6 CSR dual-issue control hazard
+Reason: Clear pipeline issue-hazard.
+https://github.com/openhwfoundation/cva6/pull/2329
+https://github.com/openhwfoundation/cva6/commit/92e418a507134ef4cb95925feba4a72ff7f845cb
+https://github.com/openhwfoundation/cva6/commit/827daa09f413950e28e4f4cb84843e9d8e41a4c5
+
+
+
+
+
+
+
+
+NOT SELECTED
+---
+
+OpenTitan entropy-source backpressure
+Reason: Spans several files.
+https://github.com/lowRISC/opentitan/issues/21686
+https://github.com/lowRISC/opentitan/pull/21799
+
+OpenTitan reset-consistency checker
+Reason: Difficult to reduce cleanly.
+https://github.com/lowRISC/opentitan/pull/16452
+
+Corundum TX status loss
+Reason: Retained as a backup candidate.
+https://github.com/corundum/corundum/commit/56fe10f27d9b42f1ff9abe4d735b113008e4be9d
+
+
+verilog-lfsr simulation/synthesis mismatch
+Reason: The proposed fix is unmerged.
+https://github.com/alexforencich/verilog-lfsr/issues/4
+https://github.com/alexforencich/verilog-lfsr/pull/5
+
+
+OpenTitan SPI-host DIF deadlock
+Reason: Failure is in software driver ordering, not RTL.
+https://github.com/lowRISC/opentitan/pull/19699
+
+
+verilog-pcie reg-to-wire declaration
+Reason: No behavioral hardware failure.
+https://github.com/alexforencich/verilog-pcie/commit/be331e70ca4c5034916cab3769396604ae805b17
+
+
+
+
+
+
+
+PROJECTS SEARCHED
+---
+
+https://github.com/corundum/corundum
+https://github.com/lowRISC/opentitan
+https://github.com/lowRISC/ibex
+https://github.com/openhwfoundation/cva6
+https://github.com/chipsalliance/Cores-VeeR-EL2
+https://github.com/vortexgpgpu/vortex
+https://github.com/MiSTer-devel/Main_MiSTer
+https://github.com/svunit/svunit
+https://github.com/alexforencich/verilog-axis
+https://github.com/alexforencich/verilog-ethernet
+https://github.com/alexforencich/verilog-i2c
+https://github.com/alexforencich/verilog-pcie
+https://github.com/alexforencich/verilog-lfsr
+
+
+
+
+
+
+
+## SELECTED PROJECTS
+---
+
+https://github.com/corundum/
+https://github.com/lowRISC/
+https://github.com/openhwfoundation/cva6
+
+* Some projects do not have a clear GitHub issue and fixing PR

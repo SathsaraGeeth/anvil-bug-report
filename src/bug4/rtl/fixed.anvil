@@ -1,0 +1,20 @@
+chan message_ch {
+    left word : (logic[8]@#1) @dyn-@dyn
+}
+
+chan aes_ch {
+    left  req : (logic[8]@ack) @dyn-@dyn,
+    right ack : (logic@#1) @dyn-@dyn
+}
+
+proc handshake_delay(input : left message_ch, aes : right aes_ch) {
+    reg block : logic[8];
+
+    loop {
+        let word = recv input.word >>
+        set block := word >>
+        send aes.req(*block) >>
+        let acknowledgement = recv aes.ack >>
+        cycle 1
+    }
+}

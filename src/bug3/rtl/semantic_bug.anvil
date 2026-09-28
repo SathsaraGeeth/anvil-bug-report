@@ -1,0 +1,28 @@
+struct cdc_observation {
+    valid : logic,
+    data  : logic[8]
+}
+
+chan cdc_observation_ch {
+    left  write : (logic[8]@#1) @dyn-@dyn,
+    right read  : (cdc_observation@#1) @dyn-@dyn
+}
+
+proc invalid_cdc_payload_semantic_bug(port : left cdc_observation_ch) {
+    reg storage : logic[8];
+    reg seen    : logic;
+    reg result  : cdc_observation;
+
+    loop {
+        if ready port.write {
+            let data = recv port.write >>
+            set storage := data;
+            set seen := 1'b1
+        } else {
+            set seen := 1'b0
+        } >>
+        set result.valid := *seen;
+        set result.data := *storage >>
+        send port.read(*result) >> cycle 1
+    }
+}

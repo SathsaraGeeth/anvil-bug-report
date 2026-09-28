@@ -1,0 +1,20 @@
+chan queue_init_ch {
+    right entries : (logic[256][32]@#1) @dyn-@dyn
+}
+
+proc queue_init(port : left queue_init_ch) {
+    reg queue_ram   : logic[256][32];
+    reg initialized : logic;
+
+    loop {
+        if (*initialized == 1'b0) {
+            generate (i : 0, 255, 1) {
+                set queue_ram[i] := 32'b0
+            };
+            set initialized := 1'b1
+        } else {
+            set initialized := *initialized
+        } >>
+        send port.entries(*queue_ram) >> cycle 1
+    }
+}

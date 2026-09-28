@@ -1,0 +1,13 @@
+[options]
+mode live
+
+[engines]
+aiger suprove
+
+[script]
+read -formal fixed.sv anvil_live_properties.sv
+prep -top handshake_anvil_live_properties
+
+[files]
+rtl/generated/fixed.sv
+formal/anvil_live_properties.sv

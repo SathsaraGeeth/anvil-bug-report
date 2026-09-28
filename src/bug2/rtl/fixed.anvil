@@ -1,0 +1,42 @@
+enum fifo_op {
+    push,
+    pop
+}
+
+struct fifo_cmd {
+    op   : fifo_op,
+    data : logic[8]
+}
+
+struct fifo_obs {
+    empty : logic,
+    data  : logic[8]
+}
+
+chan stale_fifo_ch {
+    left  cmd : (fifo_cmd@#1) @dyn-@dyn,
+    right obs : (fifo_obs@#1) @dyn-@dyn
+}
+
+proc stale_fifo(port : left stale_fifo_ch) {
+    reg full    : logic;
+    reg storage : logic[8];
+    reg result  : fifo_obs;
+
+    loop {
+        let command = recv port.cmd >>
+        if (command.op == fifo_op::push) {
+            set storage := command.data;
+            set full := 1'b1
+        } else {
+            set full := 1'b0
+        } >>
+        set result.empty := (*full == 1'b0);
+        if (*full == 1'b0) {
+            set result.data := 8'b0
+        } else {
+            set result.data := *storage
+        } >>
+        send port.obs(*result) >> cycle 1
+    }
+}

@@ -1,0 +1,23 @@
+[tasks]
+semantic_bug
+fixed
+
+[options]
+semantic_bug: mode bmc
+fixed: mode prove
+depth 16
+
+[engines]
+semantic_bug: smtbmc z3
+fixed: abc pdr
+
+[script]
+semantic_bug: read -formal -sv semantic_bug.sv anvil_properties.sv
+semantic_bug: prep -top handshake_anvil_semantic_properties
+fixed: read -formal -sv fixed.sv anvil_properties.sv
+fixed: prep -top handshake_anvil_fixed_properties
+
+[files]
+semantic_bug: rtl/generated/semantic_bug.sv
+fixed: rtl/generated/fixed.sv
+formal/anvil_properties.sv

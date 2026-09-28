@@ -1,0 +1,23 @@
+[tasks]
+buggy
+fixed
+
+[options]
+buggy: mode bmc
+fixed: mode prove
+depth 6
+
+[engines]
+buggy: smtbmc z3
+fixed: smtbmc z3
+
+[script]
+buggy: read -formal -sv buggy.sv anvil_properties.sv
+buggy: prep -top queue_init_anvil_properties
+fixed: read -formal -sv fixed.sv anvil_properties.sv
+fixed: prep -top queue_init_anvil_properties
+
+[files]
+buggy: rtl/generated/buggy.sv
+fixed: rtl/generated/fixed.sv
+formal/anvil_properties.sv

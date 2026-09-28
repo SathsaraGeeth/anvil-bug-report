@@ -1,0 +1,35 @@
+Reading .sby configuration from stdin:
+SBY  2:26:26 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] Removing directory '/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy'.
+SBY  2:26:26 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug1/rtl/generated/buggy.sv' to '/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy/src/buggy.sv'.
+SBY  2:26:26 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug1/formal/anvil_properties.sv' to '/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy/src/anvil_properties.sv'.
+SBY  2:26:26 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: smtbmc z3
+SBY  2:26:26 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] base: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY  2:26:26 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] base: Warning: Wire queue_init_anvil_properties.\clk is used but has no driver.
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] base: finished (returncode=0)
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] prep: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy/model; yosys -ql design_prep.log design_prep.ys"
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] prep: Warning: Wire queue_init_anvil_properties.\clk is used but has no driver.
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] prep: finished (returncode=0)
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] smt2: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] smt2: finished (returncode=0)
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy; yosys-smtbmc -s z3 --presat --noprogress -t 6  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Solver: z3
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Checking assumptions in step 3..
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Checking assertions in step 3..
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Checking assumptions in step 4..
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Checking assertions in step 4..
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Checking assumptions in step 5..
+SBY  2:26:27 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Checking assertions in step 5..
+SBY  2:26:28 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: ##   0:00:00  Status: passed
+SBY  2:26:28 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: finished (returncode=0)
+SBY  2:26:28 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] engine_0: Status returned by engine: pass
+SBY  2:26:28 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:01 (1)
+SBY  2:26:28 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:01 (1)
+SBY  2:26:28 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] summary: engine_0 (smtbmc z3) returned pass
+SBY  2:26:28 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] summary: engine_0 did not produce any traces
+SBY  2:26:28 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug1_buggy] DONE (PASS, rc=0)

@@ -1,0 +1,20 @@
+[tasks]
+buggy
+fixed
+
+[options]
+mode live
+
+[engines]
+aiger suprove
+
+[script]
+buggy: read -formal buggy.sv sby_properties.sv
+buggy: prep -top sby_properties
+fixed: read -formal fixed.sv sby_properties.sv
+fixed: prep -top sby_properties
+
+[files]
+buggy: rtl/buggy.sv
+fixed: rtl/fixed.sv
+formal/sby_properties.sv

@@ -1,0 +1,40 @@
+enum fu {
+    alu,
+    csr,
+    load,
+    store,
+    mult,
+    fpu
+}
+
+struct issue_pair {
+    valid0 : logic,
+    fu0    : fu,
+    valid1 : logic,
+    fu1    : fu
+}
+
+struct issue_result {
+    issue0 : logic,
+    issue1 : logic
+}
+
+chan dual_issue_ch {
+    left  pair   : (issue_pair@#1) @dyn-@dyn,
+    right result : (issue_result@#1) @dyn-@dyn
+}
+
+proc csr_dual_issue(port : left dual_issue_ch) {
+    reg output : issue_result;
+
+    loop {
+        let input = recv port.pair >>
+        set output.issue0 := input.valid0;
+        if ((input.fu0 == fu::csr) || (input.fu1 == fu::csr)) {
+            set output.issue1 := 1'b0
+        } else {
+            set output.issue1 := input.valid1
+        } >>
+        send port.result(*output) >> cycle 1
+    }
+}

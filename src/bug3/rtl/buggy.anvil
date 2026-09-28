@@ -1,0 +1,18 @@
+chan cdc_payload_ch {
+    left  write : (logic[8]@#1) @dyn-@dyn,
+    right read  : (logic[8]@#3) @dyn-@dyn
+}
+
+proc invalid_cdc_payload(port : left cdc_payload_ch) {
+    reg storage : logic[8];
+
+    loop {
+        let first = recv port.write >>
+        set storage := first >>
+
+        send port.read(*storage);
+        let replacement = recv port.write >>
+        set storage := replacement >>
+        cycle 1
+    }
+}
