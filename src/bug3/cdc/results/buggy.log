@@ -1,0 +1,24 @@
+frontend: slang
+top:      cdc_check_top
+src:      ../../src/bug3/rtl/buggy.sv
+src:      ../../src/bug3/cdc/top.sv
+rtl-buddy-cdc 0.5.0 — cdc_check_top                                         FAIL
+
+Design
+  7 ports · 7 cells · 5 flops (3 rd_clk, 2 wr_clk)
+  2 cross-domain crossings detected (2 async per SDC) · SDC: 2 clocks, 1 async group
+
+Violations  (2 error)
+
+  CDC-001 — Unsynchronized control crossing (no second-stage flop)
+    dut
+      error  ../../src/bug3/rtl/buggy.sv:30
+        unsynchronized control crossing wr_clk → rd_clk (src: flop
+        dut.$slang$adff$2): destination flop dut.$slang$adff$3 has no
+        second-stage synchronizer (chain depth = 1)
+
+  CDC-004 — Bus crossing without gating or gray-coding
+    error  ../../src/bug3/cdc/top.sv:30
+      unprotected bus crossing on wr_clk → rd_clk: 8-bit path with no
+      recognized gating or gray-coding (src: dut.$slang$adff$1, dst flop:
+      $slang$adff$5)

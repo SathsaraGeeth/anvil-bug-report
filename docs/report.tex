@@ -1107,8 +1107,9 @@ for Bug~1 and PDR for Bugs~2--5. Bug~4 also checks liveness with
 
 \subsection{CDC}
 
-The structural CDC check for Bug~3 was not performed because no CDC tool was
-available.
+For Bug~3, rtl-buddy-cdc reported the buggy payload as an unprotected bus
+crossing. It did not report this issue for the fixed, valid-gated
+payload~\cite{rtl-buddy-cdc,bug3-cdc-results}.
 
 % ------------------
 
@@ -1265,6 +1266,10 @@ Generated-Anvil formal configurations, properties, and logs:
 \bibitem{symbiyosys-version}
 \href{https://github.com/YosysHQ/sby/commit/fea6e467d067b3ea84b6b5ac08cd48beb59f0d42}{SymbiYosys version 0.67, revision
 \path{fea6e467d067b3ea84b6b5ac08cd48beb59f0d42}}.
+
+\bibitem{rtl-buddy-cdc}
+\href{https://github.com/rtl-buddy/rtl-buddy-cdc/commit/df996d55af0e8b824183d03d531426b8601af429}{rtl-buddy-cdc version 0.5.0, revision
+\path{df996d55af0e8b824183d03d531426b8601af429}}.
 
 \bibitem{corundum}
 \href{https://github.com/corundum/corundum}{Corundum source repository}.
@@ -1480,6 +1485,10 @@ ASPLOS, 2026.
 \href{run:../src/bug3/formal/results/logs/anvil_compile_fixed.log}{\path{src/bug3/formal/results/logs/anvil_compile_fixed.log}};
 \href{run:../src/bug3/formal/results/logs/anvil_semantic_bug.log}{\path{src/bug3/formal/results/logs/anvil_semantic_bug.log}};
 \href{run:../src/bug3/formal/results/logs/anvil_fixed.log}{\path{src/bug3/formal/results/logs/anvil_fixed.log}}.
+
+\bibitem{bug3-cdc-results}
+\href{run:../src/bug3/cdc/results/buggy.log}{\path{src/bug3/cdc/results/buggy.log}};
+\href{run:../src/bug3/cdc/results/fixed.log}{\path{src/bug3/cdc/results/fixed.log}}.
 
 \bibitem{bug4-sv-buggy}
 \href{run:../src/bug4/rtl/buggy.sv}{\path{src/bug4/rtl/buggy.sv}}.
