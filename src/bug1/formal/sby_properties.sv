@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module sby_properties;
 
 localparam int QUEUE_COUNT = 256;

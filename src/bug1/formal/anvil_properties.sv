@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module queue_init_anvil_properties;
 
 localparam int QUEUE_COUNT = 256;

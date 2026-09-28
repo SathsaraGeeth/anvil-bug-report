@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module handshake_anvil_live_properties;
 
     (* gclk *) logic f_clk;

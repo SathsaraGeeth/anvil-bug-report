@@ -73,7 +73,7 @@
 \urlstyle{same}
 \hypersetup{
   hidelinks,
-  pdftitle={[Draft] SystemVerilog RTL Bug Study},
+  pdftitle={SystemVerilog RTL Bug Study},
   pdfauthor={Geeth Sathsara Wijesekara}}
 
 % ----------------------------------------------------------------
@@ -90,7 +90,7 @@
 % ----------------------------------------------------------------
 
 % Title + Cover Page
-\title{[Draft] SystemVerilog RTL Bug Study}
+\title{SystemVerilog RTL Bug Study}
 \author{Geeth Sathsara Wijesekara}
 \date{}
 
@@ -767,7 +767,7 @@ VALID-and-READY handshake~\cite{xilinx-axi-demo}.
 \subsection{Detection}
 
 % - SVA property/lint to catch this class
-This type of bug can be detected by checking that the halted request immediately
+This type of bug can be detected by checking that the halt request immediately
 blocks readiness. The same invariant can be checked in simulation or as
 a formal property.
 
@@ -839,7 +839,7 @@ ACK must eventually rise after a request and eventually fall. Without these
 assumptions, the tool can produce a counterexample in which the environment
 holds ACK forever. The formal setup is available here~\cite{bug4-sby-checks}.
 
-Liveness checks can be more expensive than safety checks. Weak fairness
+Liveness checks can be more expensive than safety checks. Insufficient fairness
 assumptions may prevent a proof. Assumptions that are too strong or unrealistic
 may make the result meaningless.
 
@@ -932,7 +932,7 @@ The buggy and fixed SystemVerilog variants are provided separately
 
 % - Why simulation, review, or lint did not catch it
 The PR does not state how the bug was found. A visible failure requires a CSR
-to issue beside and affect another instruction.
+to issue beside another instruction and affect its behavior.
 
 
 

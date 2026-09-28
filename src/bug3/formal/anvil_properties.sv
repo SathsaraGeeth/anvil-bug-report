@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module cdc_anvil_fixed_properties;
 
     (* gclk *) logic f_clk;

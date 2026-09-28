@@ -21,7 +21,7 @@ run_sim() {
 
     echo "Simulation: Bug $bug, $variant"
     (cd "$root/src/bug$bug" &&
-        verilator --binary --timing --assert -Wno-fatal \
+        verilator --binary --timing --assert -Wno-fatal --timescale 1ns/1ps \
             --top-module "$top" --Mdir "$build" -f "$file_list" &&
         "$build/V$top") || true
 }
@@ -38,7 +38,8 @@ run_anvil_sim() {
         define=(-DSEMANTIC)
     fi
 
-    verilator --binary --timing --assert -Wno-fatal "${define[@]}" \
+    verilator --binary --timing --assert -Wno-fatal --timescale 1ns/1ps \
+        "${define[@]}" \
         --top-module anvil_tb --Mdir "$build" \
         "$root/src/bug$bug/rtl/generated/$variant.sv" \
         "$root/src/bug$bug/tb/anvil_tb.sv" &&

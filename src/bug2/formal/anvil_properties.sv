@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module stale_fifo_anvil_properties;
 
     (* gclk *) logic f_clk;

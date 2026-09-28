@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module sby_properties;
 
     localparam logic [2:0] CSR = 3'd1;
