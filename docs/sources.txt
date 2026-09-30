@@ -30,6 +30,7 @@ https://github.com/rtl-buddy/rtl-buddy-cdc/commit/df996d55af0e8b824183d03d531426
 
 BUG 1
 ---
+Last accessed date: 27 Sept 2026
 
 Corundum source repository
 Identifier: corundum/corundum
@@ -105,6 +106,7 @@ https://github.com/lowRISC/opentitan
 
 BUG 2
 ---
+Last accessed date: 27 Sept 2026
 
 OpenTitan stale UART data report
 Identifier: Issue #2315
@@ -145,6 +147,7 @@ https://github.com/freecores/uart16550/blob/master/rtl/verilog/uart_regs.v
 
 BUG 3
 ---
+Last accessed date: 27 Sept 2026
 
 OpenTitan asynchronous-path report
 Identifier: Issue #13834
@@ -180,6 +183,7 @@ https://github.com/freecores/uart16550/commit/780ac1c1252506fe719f306f6c30364a8b
 
 BUG 4
 ---
+Last accessed date: 27 Sept 2026
 
 OpenTitan handshake fix
 Identifier: PR #15854
@@ -220,6 +224,7 @@ https://zipcpu.com/formal/2019/05/13/axifull.html
 
 BUG 5
 ---
+Last accessed date: 27 Sept 2026
 
 CVA6 source repository
 Identifier: openhwgroup/cva6

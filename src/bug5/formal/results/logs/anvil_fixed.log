@@ -1,43 +1,42 @@
-Reading .sby configuration from stdin:
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] Removing directory '/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed'.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug5/rtl/generated/fixed.sv' to '/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed/src/fixed.sv'.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug5/formal/anvil_properties.sv' to '/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed/src/anvil_properties.sv'.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: abc pdr
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] base: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed/src; yosys -ql ../model/design.log ../model/design.ys"
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] base: Warning: Wire csr_anvil_properties.\clk is used but has no driver.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] base: finished (returncode=0)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] prep: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed/model; yosys -ql design_prep.log design_prep.ys"
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] prep: Warning: Wire csr_anvil_properties.\clk is used but has no driver.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] prep: finished (returncode=0)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] aig: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed/model; yosys -ql design_aiger.log design_aiger.ys"
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] aig: finished (returncode=0)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed; yosys-abc -c 'read_aiger model/design_aiger.aig; fold; strash; pdr -v -l; write_cex -a engine_0/trace.aiw'"
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: ======== ABC command line "read_aiger model/design_aiger.aig; fold; strash; pdr -v -l; write_cex -a engine_0/trace.aiw"
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Warning: The last 3 outputs are interpreted as constraints.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: VarMax = 300. FrameMax = 10000. QueMax = 0. TimeMax = 139. MonoCNF = no. SkipGen = no. SolveAll = no.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Frame Clauses                                                     Max Queue Flops Time
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: 1 : 0 3                                                                 1     7      0.00 sec  T/O =  0  PRV =  0
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: 2 : 0 2 2 ~1                                                             1     9      0.00 sec  T/O =  0  PRV =  0
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Proved output 0 in frame 2.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Proved output 1 in frame 2.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: 3 : 0 2 0 0 ~3                                                           0     9      0.00 sec  T/O =  0  PRV =  2
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Block =    5  Oblig =     5  Clause =     5  Call =    41 (sat=68.3%)  Cex =   0  Start =   0
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: SAT solving =     0.00 sec (  3.86 %)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: unsat     =     0.00 sec (  0.16 %)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: sat       =     0.00 sec (  3.70 %)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Generalize  =     0.00 sec (  2.49 %)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Push clause =     0.00 sec (  0.58 %)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Ternary sim =     0.00 sec (  0.27 %)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Containment =     0.00 sec (  0.00 %)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: CNF compute =     0.00 sec (  0.35 %)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Refinement  =     0.00 sec (  0.00 %)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: TOTAL       =     0.01 sec (100.00 %)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Property proved.  Time =     0.01 sec
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Counter-example is not available.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: finished (returncode=0)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] engine_0: Status returned by engine: PASS
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] summary: engine_0 (abc pdr) returned PASS
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] summary: engine_0 did not produce any traces
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_fixed] DONE (PASS, rc=0)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] Removing directory '/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed'.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug5/rtl/generated/fixed.sv' to '/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed/src/fixed.sv'.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug5/formal/anvil_properties.sv' to '/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed/src/anvil_properties.sv'.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: abc pdr
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] base: starting process "cd /tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] base: Warning: Wire csr_anvil_properties.\f_clk is used but has no driver.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] base: finished (returncode=0)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] prep: starting process "cd /tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed/model; yosys -ql design_prep.log design_prep.ys"
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] prep: Warning: Wire csr_anvil_properties.\f_clk is used but has no driver.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] prep: finished (returncode=0)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] aig: starting process "cd /tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed/model; yosys -ql design_aiger.log design_aiger.ys"
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] aig: finished (returncode=0)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: starting process "cd /tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed; yosys-abc -c 'read_aiger model/design_aiger.aig; fold; strash; pdr -v -l; write_cex -a engine_0/trace.aiw'"
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: ======== ABC command line "read_aiger model/design_aiger.aig; fold; strash; pdr -v -l; write_cex -a engine_0/trace.aiw"
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Warning: The last 3 outputs are interpreted as constraints.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: VarMax = 300. FrameMax = 10000. QueMax = 0. TimeMax = 139. MonoCNF = no. SkipGen = no. SolveAll = no.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Frame Clauses                                                     Max Queue Flops Time
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: 1 : 0 3                                                                 1     7      0.00 sec  T/O =  0  PRV =  0
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: 2 : 0 2 2 ~1                                                             1     9      0.00 sec  T/O =  0  PRV =  0
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Proved output 0 in frame 2.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Proved output 1 in frame 2.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: 3 : 0 2 0 0 ~3                                                           0     9      0.00 sec  T/O =  0  PRV =  2
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Block =    5  Oblig =     5  Clause =     5  Call =    41 (sat=68.3%)  Cex =   0  Start =   0
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: SAT solving =     0.00 sec (  3.92 %)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: unsat     =     0.00 sec (  0.18 %)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: sat       =     0.00 sec (  3.74 %)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Generalize  =     0.00 sec (  2.50 %)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Push clause =     0.00 sec (  0.61 %)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Ternary sim =     0.00 sec (  0.23 %)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Containment =     0.00 sec (  0.00 %)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: CNF compute =     0.00 sec (  0.33 %)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Refinement  =     0.00 sec (  0.00 %)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: TOTAL       =     0.01 sec (100.00 %)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Property proved.  Time =     0.01 sec
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Counter-example is not available.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: finished (returncode=0)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] engine_0: Status returned by engine: PASS
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] summary: engine_0 (abc pdr) returned PASS
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] summary: engine_0 did not produce any traces
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_fixed] DONE (PASS, rc=0)

@@ -1,35 +1,36 @@
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug2/rtl/buggy.sv' to '/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy/src/buggy.sv'.
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug2/formal/sby_properties.sv' to '/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy/src/sby_properties.sv'.
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: smtbmc z3
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] base: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy/src; yosys -ql ../model/design.log ../model/design.ys"
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] base: Warning: Wire sby_properties.\f_clk is used but has no driver.
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] base: finished (returncode=0)
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] prep: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy/model; yosys -ql design_prep.log design_prep.ys"
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] prep: Warning: Wire sby_properties.\f_clk is used but has no driver.
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] prep: finished (returncode=0)
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] smt2: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy/model; yosys -ql design_smt2.log design_smt2.ys"
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] smt2: finished (returncode=0)
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy; yosys-smtbmc -s z3 --presat --noprogress -t 8  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Solver: z3
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Checking assumptions in step 0..
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Checking assertions in step 0..
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Checking assumptions in step 1..
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Checking assertions in step 1..
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Checking assumptions in step 2..
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Checking assertions in step 2..
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  BMC failed!
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Assert failed in sby_properties: sby_properties.sv:33.13-33.35 (_witness_.check_assert_sby_properties_sv_33_10)
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace.vcd
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace_tb.v
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace.smtc
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace.yw
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: ##   0:00:00  Status: failed
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: finished (returncode=1)
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] engine_0: Status returned by engine: FAIL
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] summary: engine_0 (smtbmc z3) returned FAIL
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] summary: counterexample trace: /tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy/engine_0/trace.vcd
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] summary:   failed assertion sby_properties._witness_.check_assert_sby_properties_sv_33_10 at sby_properties.sv:33.13-33.35 step 2
-SBY  2:25:45 [/tmp/rtl_bugs_matrix_oBbrad/formal_bug2_buggy] DONE (FAIL, rc=2)
-SBY  2:25:45 The following tasks failed: ['buggy']
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] Removing directory '/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy'.
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug2/rtl/buggy.sv' to '/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy/src/buggy.sv'.
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug2/formal/sby_properties.sv' to '/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy/src/sby_properties.sv'.
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: smtbmc z3
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] base: starting process "cd /tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] base: Warning: Wire sby_properties.\f_clk is used but has no driver.
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] base: finished (returncode=0)
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] prep: starting process "cd /tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy/model; yosys -ql design_prep.log design_prep.ys"
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] prep: Warning: Wire sby_properties.\f_clk is used but has no driver.
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] prep: finished (returncode=0)
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] smt2: starting process "cd /tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] smt2: finished (returncode=0)
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: starting process "cd /tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy; yosys-smtbmc -s z3 --presat --noprogress -t 8  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Solver: z3
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  BMC failed!
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Assert failed in sby_properties: sby_properties.sv:35.13-35.35 (_witness_.check_assert_sby_properties_sv_35_10)
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace.vcd
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace_tb.v
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace.smtc
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace.yw
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: ##   0:00:00  Status: failed
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: finished (returncode=1)
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] engine_0: Status returned by engine: FAIL
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] summary: engine_0 (smtbmc z3) returned FAIL
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] summary: counterexample trace: /tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy/engine_0/trace.vcd
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] summary:   failed assertion sby_properties._witness_.check_assert_sby_properties_sv_35_10 at sby_properties.sv:35.13-35.35 step 2
+SBY  0:16:38 [/tmp/tmp.gEibMlrU6b/bug2_formal.sby_buggy] DONE (FAIL, rc=2)
+SBY  0:16:38 The following tasks failed: ['buggy']

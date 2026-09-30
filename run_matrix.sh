@@ -169,8 +169,9 @@ run_sby() {
     local config="$2"
     local task="$3"
     local expected="$4"
+    local evidence="$5"
     local tag="${config//\//_}"
-    local log="$work/bug${bug}_${tag}_${task}.log"
+    local log="$root/src/bug$bug/formal/results/logs/$evidence"
     local status
     local task_args=()
     local task_name="${task:-default}"
@@ -243,28 +244,28 @@ for bug in 3 4; do
 done
 
 for bug in 1 2 3 4 5; do
-    run_sby "$bug" formal.sby buggy fail
-    run_sby "$bug" formal.sby fixed pass
+    run_sby "$bug" formal.sby buggy fail sby_buggy.log
+    run_sby "$bug" formal.sby fixed pass sby_fixed.log
 done
 
-run_sby 4 formal_live.sby buggy pass
-run_sby 4 formal_live.sby fixed pass
+run_sby 4 formal_live.sby buggy pass sby_live_buggy.log
+run_sby 4 formal_live.sby fixed pass sby_live_fixed.log
 
 for bug in 1 2 5; do
     if [[ "$bug" -eq 1 ]]; then
-        run_sby "$bug" formal/anvil.sby buggy pass
+        run_sby "$bug" formal/anvil.sby buggy pass anvil_buggy.log
     else
-        run_sby "$bug" formal/anvil.sby buggy fail
+        run_sby "$bug" formal/anvil.sby buggy fail anvil_buggy.log
     fi
-    run_sby "$bug" formal/anvil.sby fixed pass
+    run_sby "$bug" formal/anvil.sby fixed pass anvil_fixed.log
 done
 
 for bug in 3 4; do
-    run_sby "$bug" formal/anvil.sby semantic_bug fail
-    run_sby "$bug" formal/anvil.sby fixed pass
+    run_sby "$bug" formal/anvil.sby semantic_bug fail anvil_semantic_bug.log
+    run_sby "$bug" formal/anvil.sby fixed pass anvil_fixed.log
 done
 
-run_sby 4 formal/anvil_live.sby "" pass
+run_sby 4 formal/anvil_live.sby "" pass anvil_live_fixed.log
 
 if [[ "$errors" -ne 0 ]]; then
     echo "Matrix completed with $errors unexpected result(s)."

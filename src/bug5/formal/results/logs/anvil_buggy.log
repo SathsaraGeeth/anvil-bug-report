@@ -1,36 +1,36 @@
-Reading .sby configuration from stdin:
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] Removing directory '/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy'.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug5/rtl/generated/buggy.sv' to '/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy/src/buggy.sv'.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug5/formal/anvil_properties.sv' to '/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy/src/anvil_properties.sv'.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: smtbmc z3
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] base: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy/src; yosys -ql ../model/design.log ../model/design.ys"
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] base: Warning: Wire csr_anvil_properties.\clk is used but has no driver.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] base: finished (returncode=0)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] prep: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy/model; yosys -ql design_prep.log design_prep.ys"
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] prep: Warning: Wire csr_anvil_properties.\clk is used but has no driver.
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] prep: finished (returncode=0)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] smt2: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy/model; yosys -ql design_smt2.log design_smt2.ys"
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] smt2: finished (returncode=0)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: starting process "cd /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy; yosys-smtbmc -s z3 --presat --noprogress -t 12  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Solver: z3
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Checking assumptions in step 0..
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Checking assertions in step 0..
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Checking assumptions in step 1..
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Checking assertions in step 1..
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Checking assumptions in step 2..
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Checking assertions in step 2..
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  BMC failed!
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Assert failed in csr_anvil_properties: anvil_properties.sv:45.21-45.40 (_witness_.check_assert_anvil_properties_sv_45_14)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace.vcd
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace_tb.v
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace.smtc
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace.yw
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: ##   0:00:00  Status: failed
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: finished (returncode=1)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] engine_0: Status returned by engine: FAIL
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] summary: engine_0 (smtbmc z3) returned FAIL
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] summary: counterexample trace: /tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy/engine_0/trace.vcd
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] summary:   failed assertion csr_anvil_properties._witness_.check_assert_anvil_properties_sv_45_14 at anvil_properties.sv:45.21-45.40 step 2
-SBY  2:26:30 [/tmp/rtl_bugs_matrix_oBbrad/formal_anvil_bug5_buggy] DONE (FAIL, rc=2)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] Removing directory '/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy'.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug5/rtl/generated/buggy.sv' to '/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy/src/buggy.sv'.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] Copy '/mnt/fileserver/prj/rtl_bugs/src/bug5/formal/anvil_properties.sv' to '/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy/src/anvil_properties.sv'.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: smtbmc z3
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] base: starting process "cd /tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy/src; yosys -ql ../model/design.log ../model/design.ys"
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] base: Warning: Wire csr_anvil_properties.\f_clk is used but has no driver.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] base: finished (returncode=0)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] prep: starting process "cd /tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy/model; yosys -ql design_prep.log design_prep.ys"
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] prep: Warning: Wire csr_anvil_properties.\f_clk is used but has no driver.
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] prep: finished (returncode=0)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] smt2: starting process "cd /tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy/model; yosys -ql design_smt2.log design_smt2.ys"
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] smt2: finished (returncode=0)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: starting process "cd /tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy; yosys-smtbmc -s z3 --presat --noprogress -t 12  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Solver: z3
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  BMC failed!
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Assert failed in csr_anvil_properties: anvil_properties.sv:47.21-47.42 (_witness_.check_assert_anvil_properties_sv_47_14)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace.vcd
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace_tb.v
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace.smtc
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace.yw
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: ##   0:00:00  Status: failed
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: finished (returncode=1)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] engine_0: Status returned by engine: FAIL
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] summary: engine_0 (smtbmc z3) returned FAIL
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] summary: counterexample trace: /tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy/engine_0/trace.vcd
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] summary:   failed assertion csr_anvil_properties._witness_.check_assert_anvil_properties_sv_47_14 at anvil_properties.sv:47.21-47.42 step 2
+SBY  0:16:43 [/tmp/tmp.gEibMlrU6b/bug5_formal_anvil.sby_buggy] DONE (FAIL, rc=2)
+SBY  0:16:43 The following tasks failed: ['buggy']
