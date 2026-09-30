@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.8.5)  30 SEP 2026 21:20
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.8.5)  30 SEP 2026 22:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -647,7 +647,7 @@ Underfull \hbox (badness 2608) in paragraph at lines 547--550
  []
 
 
-Underfull \hbox (badness 7796) in paragraph at lines 613--616
+Underfull \hbox (badness 7796) in paragraph at lines 617--620
 []\T1/lmr/m/n/10 (+20) The as-sign-ment gives the his-tor-i-cal Open-Cores
  []
 
@@ -659,50 +659,50 @@ Underfull \hbox (badness 7796) in paragraph at lines 613--616
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg)
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd)
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg)
-Underfull \hbox (badness 7649) in paragraph at lines 1109--1109
+Underfull \hbox (badness 7649) in paragraph at lines 1113--1113
 []|\T1/lmr/m/n/8 (+20) Structural CDC anal-y-sis
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1109--1109
+Underfull \hbox (badness 10000) in paragraph at lines 1113--1113
 []|\T1/lmr/m/n/8 (+20) Detected when
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1109--1109
+Underfull \hbox (badness 10000) in paragraph at lines 1113--1113
 []|\T1/lmr/m/n/8 (+20) Detected when
  []
 
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 1143.
+(Font)              <10> on input line 1147.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 1143.
+(Font)              <7> on input line 1147.
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
-162.
+166.
 (/usr/share/texmf/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-Overfull \hbox (3.51566pt too wide) in paragraph at lines 1246--1246
+Overfull \hbox (3.51566pt too wide) in paragraph at lines 1250--1250
 []|[]|  
  []
 
 
-Overfull \hbox (3.51566pt too wide) in paragraph at lines 1246--1246
+Overfull \hbox (3.51566pt too wide) in paragraph at lines 1250--1250
 []|[]|  
  []
 
 
-Overfull \hbox (0.56253pt too wide) in paragraph at lines 1246--1246
+Overfull \hbox (0.56253pt too wide) in paragraph at lines 1250--1250
 []|[]|  
  []
 
 
-Overfull \hbox (0.56253pt too wide) in paragraph at lines 1246--1246
+Overfull \hbox (0.56253pt too wide) in paragraph at lines 1250--1250
 []|[]|  
  []
 
 
-Overfull \hbox (0.56253pt too wide) in paragraph at lines 1246--1246
+Overfull \hbox (0.56253pt too wide) in paragraph at lines 1250--1250
 []|[]|  
  []
 
@@ -749,7 +749,7 @@ onts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb>
 </usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type
 1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt8.pfb></usr/
 share/texmf/fonts/type1/public/lm/lmtti10.pfb>
-Output written on report.pdf (8 pages, 432934 bytes).
+Output written on report.pdf (8 pages, 433248 bytes).
 PDF statistics:
  953 PDF objects out of 1000 (max. 8388607)
  877 compressed objects within 9 object streams

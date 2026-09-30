@@ -14,14 +14,14 @@ module cdc_payload #(
 
 logic [WIDTH-1:0] r_storage;
 logic r_write_seen;
-logic r_valid_meta;
+(* cdc_sync *) logic r_valid_meta;
 logic r_valid_sync;
 
 always_ff @(posedge i_wr_clk or negedge i_rst_n) begin
     if (!i_rst_n) begin
         r_storage    <= '0;
         r_write_seen <= 1'b0;
-    end else if (i_write) begin
+    end else if (i_write && !r_write_seen) begin
         r_storage    <= i_wdata;
         r_write_seen <= 1'b1;
     end

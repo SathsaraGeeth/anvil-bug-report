@@ -580,6 +580,10 @@ The buggy and fixed SystemVerilog variants are provided separately
 \cite{bug3-sv-buggy,bug3-sv-fixed}, together with their Anvil versions
 \cite{bug3-anvil-buggy,bug3-anvil-fixed}.
 
+To keep the SystemVerilog reproducer minimal, both variants ignore writes after
+the first. The Anvil versions retain repeated transfers because Anvil's channel
+semantics express and check payload lifetimes with less code.
+
 % -----------------------
 
 
@@ -1601,6 +1605,7 @@ ASPLOS, 2026.
   erratum~\cite{intel-errata}, with the more relevant XiangShan dependency
   bug~\cite{xiangshan-vl-bug,xiangshan-vl-fix}.
   \item 2: Generalized the detection discussions for Bugs~1-5.
+  \item 3: Clarified Bug~3's reduction scope.
 \end{itemize}
 
 \end{document}
