@@ -272,9 +272,17 @@ in simulation.
 \subsection{Detection}
 
 % - SVA property/lint to catch this class
-This type of bug can be detected by asserting that every memory entry has the
-expected value immediately after reset or initialization. This invariant can
-be checked in simulation or as a formal property.
+More generally, reset and initialization bugs can be detected by checking that
+all relevant state reaches a valid value after reset. Lint can flag state that
+is never reset, while simulation and formal properties can verify the expected
+post-reset values.
+
+\begin{lstlisting}
+reset_complete |-> all_required_state_is_valid
+\end{lstlisting}
+
+For this reproducer, the concrete invariant is that every
+queue-memory entry is known and zero.
 
 The simulation implementation \cite{bug1-simulation-check}:
 
@@ -304,7 +312,8 @@ end
 %   or design constraints)
 Simulation is cheap for this small memory, and its runtime grows linearly with
 the number of entries. Formal checking is exhaustive, but its state space
-grows with the memory.
+grows with the memory. Lint may also report state that is deliberately left
+unreset, so its warnings need to be reviewed or waived.
 
 Anvil's checker generally cannot detect this type of bug, and it accepts both
 versions. Its generated RTL initializes the full register, masking this
@@ -441,9 +450,17 @@ used stale receive-FIFO data without first checking whether the FIFO was empty
 \subsection{Detection}
 
 % - SVA property/lint to catch this class
-This type of bug can be detected by checking that an externally visible FIFO
-returns zero whenever it is empty. The invariant can be checked in simulation
-or as a formal property.
+More generally, buffering and flow-control bugs can be detected by checking
+that interface outputs and transfer decisions agree with the buffer's occupancy
+state. Simulation and formal properties can check these relationships on every
+cycle.
+
+\begin{lstlisting}
+transfer |-> valid && ready && occupancy_allows_transfer
+\end{lstlisting}
+
+For this reproducer, the concrete invariant is that the externally
+visible FIFO output is zero whenever the FIFO is empty.
 
 The simulation implementation \cite{bug2-simulation-check}:
 
@@ -606,9 +623,18 @@ commit \texttt{780ac1c} added synchronizer flops~\cite{uart16550-cdc}.
 \subsection{Detection}
 
 % - SVA property/lint to catch this class
-This type of bug is primarily detected by structural CDC analysis. A simulation
-or formal check can additionally require the destination payload to remain zero
-until its synchronized valid signal is asserted.
+More generally, CDC bugs can be detected with structural analysis that
+identifies unsynchronized paths and unsafe multi-bit crossings. Simulation and
+formal properties can complement this analysis by checking how the destination
+uses the crossing.
+
+\begin{lstlisting}
+reject unsynchronized control and unqualified payload crossings
+\end{lstlisting}
+
+For this reproducer, the concrete invariant is that the
+destination payload remains zero until its synchronized valid signal is
+asserted.
 
 The simulation implementation \cite{bug3-simulation-check}:
 
@@ -767,9 +793,17 @@ VALID-and-READY handshake~\cite{xilinx-axi-demo}.
 \subsection{Detection}
 
 % - SVA property/lint to catch this class
-This type of bug can be detected by checking that the halt request immediately
-blocks readiness. The same invariant can be checked in simulation or as
-a formal property.
+More generally, handshake bugs can be detected by checking when transfers are
+accepted and by tracking each request through the required protocol sequence.
+Simulation and formal properties can check both safety and eventual completion.
+
+\begin{lstlisting}
+accepted |-> valid && ready
+request_started |-> required_sequence_holds_until_idle
+\end{lstlisting}
+
+For this reproducer, the concrete invariant is that the halt request immediately
+blocks readiness.
 
 The simulation implementation \cite{bug4-simulation-check}:
 
@@ -954,14 +988,12 @@ no test or assertion~\cite{cva6-csr-hazard-commit,cva6-csr-port-commit}.
 \subsection{Classification}
 
 % - Name of the class
-This bug can be classified as a \textbf{Pipeline control, issue hazards, and
-speculation} bug.
+This bug can be classified as a \textbf{Pipeline control and hazards} bug.
 
 % - Second instance of the same class (can be from section 4)
-The assignment gives Intel errata SKL150/KBL095 as a second instance.
-It reports unpredictable behavior when short loops mix AH/BH/CH/DH with the
-corresponding wider register while both logical processors are active
-\cite{intel-errata}.
+XiangShan provides a second instance of this class. Its rename-stage bypass
+used the wrong dependency tag, so \texttt{csrr vl} immediately following
+\texttt{vsetvli} read stale state~\cite{xiangshan-vl-bug,xiangshan-vl-fix}.
 
 % -----------------------
 
@@ -972,9 +1004,17 @@ corresponding wider register while both logical processors are active
 \subsection{Detection}
 
 % - SVA property/lint to catch this class
-This type of bug can be detected by checking that a CSR instruction never
-issues beside another instruction and never uses the second issue lane. The
-invariant can be checked in simulation or as a formal property.
+More generally, pipeline-control and hazard bugs can be detected by checking
+each instruction selected for issue against the design's dependency and
+serialization rules. Simulation and formal properties can exercise different
+combinations of instruction classes.
+
+\begin{lstlisting}
+issued(i) |-> dependencies_clear(i) && serialization_allows(i)
+\end{lstlisting}
+
+For this reproducer, the concrete invariant is that a CSR instruction
+never issues beside another instruction and never uses the second issue lane.
 
 The simulation implementation \cite{bug5-simulation-check}:
 
@@ -1061,7 +1101,7 @@ Protocol assertions with continuous input and delayed ACK. &
 Detected when modeled as a channel-lifetime violation. \\
 \hline
 
-5 & Pipeline control and issue hazards &
+5 & Pipeline control and hazards &
 A CSR can issue beside another instruction or on the wrong port. &
 Issue serialization assertions and formal instruction pairing. &
 Not detected. \\
@@ -1130,10 +1170,11 @@ OpenTitan~\cite{opentitan}, and CVA6~\cite{cva6}.
 
 \begingroup
 \centering
-\tiny
-\setlength{\tabcolsep}{0.6pt}
-\renewcommand{\arraystretch}{1.05}
-\begin{tabularx}{\textwidth}{c *{13}{>{\raggedright\arraybackslash}X}}
+\rotatebox{90}{\begin{minipage}{0.84\textheight}
+\scriptsize
+\setlength{\tabcolsep}{0.8pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{tabularx}{\linewidth}{c *{13}{>{\raggedright\arraybackslash}X}}
 \hline
 \textbf{Bug} &
 \shortstack{\textbf{Sim/SV}\\\textbf{buggy}\\\cite{matrix-sv-sim}} &
@@ -1202,12 +1243,11 @@ Safety; BMC; Z3; d12; FAIL/SAT & --- &
 Safety; PDR; ABC; PASS \\
 \hline
 \end{tabularx}
+\end{minipage}}
 \par
 \endgroup
 % ----------------------------------------------------------------
 
-
-\newpage
 
 % References
 \titlespacing*{\subsection}{0pt}{1.8ex plus 0.5ex minus 0.2ex}{0.7ex}
@@ -1394,6 +1434,12 @@ Generated-Anvil formal configurations, properties, and logs:
 \bibitem{uart16550-cdc}
 \href{https://github.com/freecores/uart16550/commit/780ac1c1252506fe719f306f6c30364a8b1e01eb}{OpenCores UART16550 commit \texttt{780ac1c}: add receive-input synchronizer flops}.
 
+\bibitem{xiangshan-vl-bug}
+\href{https://github.com/OpenXiangShan/XiangShan/issues/5739}{XiangShan issue~\#5739: \texttt{csrr vl} reads stale zero immediately after \texttt{vsetvli}}.
+
+\bibitem{xiangshan-vl-fix}
+\href{https://github.com/OpenXiangShan/XiangShan/pull/5743}{XiangShan PR~\#5743: fix vector-length dependency bypass in rename}.
+
 \bibitem{intel-errata}
 \href{https://www.intel.com/content/www/us/en/content-details/334408/}{Intel processor specification update: SKL150/KBL095}.
 
@@ -1547,5 +1593,14 @@ ASPLOS, 2026.
 \href{run:../src/bug5/formal/results/logs/anvil_buggy.log}{\path{src/bug5/formal/results/logs/anvil_buggy.log}};
 \href{run:../src/bug5/formal/results/logs/anvil_fixed.log}{\path{src/bug5/formal/results/logs/anvil_fixed.log}}.
 \end{thebibliography}
+
+\section*{Revision History}
+
+\begin{itemize}
+  \item 1: Replaced the second example for Bug~5, Intel's partial-register
+  erratum~\cite{intel-errata}, with the more relevant XiangShan dependency
+  bug~\cite{xiangshan-vl-bug,xiangshan-vl-fix}.
+  \item 2: Generalized the detection discussions for Bugs~1-5.
+\end{itemize}
 
 \end{document}

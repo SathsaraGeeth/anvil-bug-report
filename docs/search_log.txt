@@ -26,13 +26,6 @@ https://github.com/openhwfoundation/cva6/pull/2329
 https://github.com/openhwfoundation/cva6/commit/92e418a507134ef4cb95925feba4a72ff7f845cb
 https://github.com/openhwfoundation/cva6/commit/827daa09f413950e28e4f4cb84843e9d8e41a4c5
 
-
-
-
-
-
-
-
 NOT SELECTED
 ---
 
@@ -69,6 +62,65 @@ https://github.com/alexforencich/verilog-pcie/commit/be331e70ca4c5034916cab37693
 
 
 
+SEARCHED
+---
+OpenTitan entropy-source backpressure
+https://github.com/lowRISC/opentitan/issues/21686
+https://github.com/lowRISC/opentitan/pull/21799
+
+OpenTitan reset-consistency checker
+https://github.com/lowRISC/opentitan/pull/16452
+
+Corundum TX status loss
+https://github.com/corundum/corundum/commit/56fe10f27d9b42f1ff9abe4d735b113008e4be9d
+
+
+verilog-lfsr simulation/synthesis mismatch
+https://github.com/alexforencich/verilog-lfsr/issues/4
+https://github.com/alexforencich/verilog-lfsr/pull/5
+
+
+OpenTitan SPI-host DIF deadlock
+https://github.com/lowRISC/opentitan/pull/19699
+
+
+verilog-pcie reg-to-wire declaration
+https://github.com/alexforencich/verilog-pcie/commit/be331e70ca4c5034916cab3769396604ae805b17
+
+Corundum partial queue-memory initialization
+https://github.com/corundum/corundum/commit/0560f98e799d741d62522e61bf23321fc3f2880b
+https://github.com/corundum/corundum/commit/7bc1ecc711f3d4fce55290e0ed6d94a549cc2528
+
+OpenTitan stale data from empty FIFO
+https://github.com/lowRISC/opentitan/issues/2315
+https://github.com/lowRISC/opentitan/pull/2420
+
+OpenTitan asynchronous-FIFO invalid-data CDC exposure
+https://github.com/lowRISC/opentitan/issues/13834
+https://github.com/lowRISC/opentitan/pull/13991
+
+OpenTitan entropy-conditioner handshake delay
+https://github.com/lowRISC/opentitan/pull/15854
+
+CVA6 CSR dual-issue control hazard
+https://github.com/openhwfoundation/cva6/pull/2329
+https://github.com/openhwfoundation/cva6/commit/92e418a507134ef4cb95925feba4a72ff7f845cb
+https://github.com/openhwfoundation/cva6/commit/827daa09f413950e28e4f4cb84843e9d8e41a4c5
+
+XiangShan stale vector-length CSR read
+https://github.com/OpenXiangShan/XiangShan/issues/5739
+https://github.com/OpenXiangShan/XiangShan/pull/5743
+
+
+
+
+
+
+
+
+
+
+
 
 
 PROJECTS SEARCHED
@@ -94,7 +146,7 @@ https://github.com/alexforencich/verilog-lfsr
 
 
 
-## SELECTED PROJECTS
+SELECTED PROJECTS
 ---
 
 https://github.com/corundum/

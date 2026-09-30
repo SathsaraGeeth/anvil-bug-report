@@ -1,0 +1,282 @@
+GENERAL
+---
+
+Anvil paper
+Identifier: ASPLOS 2026 paper
+Role: Anvil background
+https://arxiv.org/abs/2503.19447
+
+Anvil source repository
+Identifier: AnvilHDL/anvil
+Role: Anvil background
+https://github.com/AnvilHDL/anvil
+
+Verilator
+Identifier: Commit 7d3021c34
+Role: Simulation tool version
+https://github.com/verilator/verilator/commit/7d3021c34d0f26a88e8b1107c50ceb2d896689b3
+
+SymbiYosys
+Identifier: Commit fea6e467
+Role: Formal tool version
+https://github.com/YosysHQ/sby/commit/fea6e467d067b3ea84b6b5ac08cd48beb59f0d42
+
+rtl-buddy-cdc
+Identifier: Commit df996d55
+Role: CDC tool version
+https://github.com/rtl-buddy/rtl-buddy-cdc/commit/df996d55af0e8b824183d03d531426b8601af429
+
+
+
+BUG 1
+---
+
+Corundum source repository
+Identifier: corundum/corundum
+Role: Primary design
+https://github.com/corundum/corundum
+
+Corundum queue manager
+Identifier: queue_manager.v at commit 0560f98e
+Role: Primary mechanism
+https://github.com/corundum/corundum/blob/0560f98e799d741d62522e61bf23321fc3f2880b/fpga/common/rtl/queue_manager.v
+
+Corundum completion queue manager
+Identifier: cpl_queue_manager.v at commit 0560f98e
+Role: Primary mechanism
+https://github.com/corundum/corundum/blob/0560f98e799d741d62522e61bf23321fc3f2880b/fpga/common/rtl/cpl_queue_manager.v
+
+Corundum transmit scheduler
+Identifier: tx_scheduler_rr.v at commit 0560f98e
+Role: Primary mechanism
+https://github.com/corundum/corundum/blob/0560f98e799d741d62522e61bf23321fc3f2880b/fpga/common/rtl/tx_scheduler_rr.v
+
+Corundum queue-manager test
+Identifier: test_queue_manager.py at commit 0f82e0c
+Role: Why it survived
+https://github.com/corundum/corundum/blob/0f82e0c5f3b9fa9a15e99d6e43b08b3b4dff7909/fpga/common/tb/queue_manager/test_queue_manager.py
+
+Corundum completion-queue test
+Identifier: test_cpl_queue_manager.py at commit 0f82e0c
+Role: Why it survived
+https://github.com/corundum/corundum/blob/0f82e0c5f3b9fa9a15e99d6e43b08b3b4dff7909/fpga/common/tb/cpl_queue_manager/test_cpl_queue_manager.py
+
+Corundum large-queue change
+Identifier: Commit 0560f98e
+Role: Primary instance; mechanism
+https://github.com/corundum/corundum/commit/0560f98e799d741d62522e61bf23321fc3f2880b
+
+Corundum initialization fix
+Identifier: PR #96
+Role: Primary instance; fix
+https://github.com/corundum/corundum/pull/96
+
+Corundum fixing commit
+Identifier: Commit 7bc1ecc
+Role: Primary mechanism; fix
+https://github.com/corundum/corundum/commit/7bc1ecc711f3d4fce55290e0ed6d94a549cc2528
+
+Corundum pre-fix parent
+Identifier: Commit 0f82e0c
+Role: Why it survived
+https://github.com/corundum/corundum/commit/0f82e0c5f3b9fa9a15e99d6e43b08b3b4dff7909
+
+Intel Quartus Prime
+Identifier: Design Suite Overview 683472
+Role: Primary-instance context
+https://www.intel.com/content/www/us/en/docs/programmable/683472/24-3/design-suite-overview.html
+
+Rocket Chip SRAM initialization
+Identifier: Commit 1cb2d1d
+Role: Second instance
+https://github.com/chipsalliance/rocket-chip/commit/1cb2d1d7b7191aff8f8004b9b64a5d908c96fd6b
+
+
+
+BUGS 2-4
+---
+
+OpenTitan source repository
+Identifier: lowRISC/opentitan
+Role: Primary design for Bugs 2, 3, and 4
+https://github.com/lowRISC/opentitan
+
+
+
+BUG 2
+---
+
+OpenTitan stale UART data report
+Identifier: Issue #2315
+Role: Primary instance
+https://github.com/lowRISC/opentitan/issues/2315
+
+OpenTitan stale FIFO fix
+Identifier: PR #2420
+Role: Primary mechanism; fix; why it survived
+https://github.com/lowRISC/opentitan/pull/2420
+
+OpenTitan stale FIFO fixing commit
+Identifier: Commit 9ac2b15
+Role: Primary mechanism; fix
+https://github.com/lowRISC/opentitan/commit/9ac2b15f162cc4bf5e6e4226ae659c9d4225e1d0
+
+OpenTitan stale FIFO pre-fix parent
+Identifier: Commit 0408a4e
+Role: Why it survived
+https://github.com/lowRISC/opentitan/commit/0408a4e7564c0fde1bf7dca87e8c8e1bce587c75
+
+OpenTitan UART test plan
+Identifier: uart_testplan.hjson at commit 0408a4e
+Role: Why it survived
+https://github.com/lowRISC/opentitan/blob/0408a4e7564c0fde1bf7dca87e8c8e1bce587c75/hw/ip/uart/data/uart_testplan.hjson
+
+OpenTitan UART scoreboard
+Identifier: uart_scoreboard.sv at commit 0408a4e
+Role: Why it survived
+https://github.com/lowRISC/opentitan/blob/0408a4e7564c0fde1bf7dca87e8c8e1bce587c75/hw/ip/uart/dv/env/uart_scoreboard.sv
+
+OpenCores UART16550 receive FIFO
+Identifier: uart_regs.v
+Role: Second instance
+https://github.com/freecores/uart16550/blob/master/rtl/verilog/uart_regs.v
+
+
+
+BUG 3
+---
+
+OpenTitan asynchronous-path report
+Identifier: Issue #13834
+Role: Primary instance; why it survived
+https://github.com/lowRISC/opentitan/issues/13834
+
+OpenTitan asynchronous-FIFO fix
+Identifier: PR #13991
+Role: Primary mechanism; fix; why it survived
+https://github.com/lowRISC/opentitan/pull/13991
+
+OpenTitan CDC fixing commit
+Identifier: Commit e0ba6cd
+Role: Primary mechanism; fix
+https://github.com/lowRISC/opentitan/commit/e0ba6cdb527c02b7e85dff048a8f168a6e166999
+
+OpenTitan CDC pre-fix parent
+Identifier: Commit 592eaf6
+Role: Why it survived
+https://github.com/lowRISC/opentitan/commit/592eaf648de3fdc0803761f9fb31390012587573
+
+OpenTitan TL-UL verification environment
+Identifier: DV documentation at commit 592eaf6
+Role: Why it survived
+https://github.com/lowRISC/opentitan/blob/592eaf648de3fdc0803761f9fb31390012587573/hw/ip/tlul/doc/dv/index.md
+
+OpenCores UART16550 synchronizer fix
+Identifier: Commit 780ac1c
+Role: Second instance
+https://github.com/freecores/uart16550/commit/780ac1c1252506fe719f306f6c30364a8b1e01eb
+
+
+
+BUG 4
+---
+
+OpenTitan handshake fix
+Identifier: PR #15854
+Role: Primary instance; fix
+https://github.com/lowRISC/opentitan/pull/15854
+
+OpenTitan handshake fixing commit
+Identifier: Commit cd1b613
+Role: Primary mechanism; fix; why it survived
+https://github.com/lowRISC/opentitan/commit/cd1b6131548f8bdb86e2f10904d0b8551db31d50
+
+OpenTitan handshake pre-fix parent
+Identifier: Commit 78944e3
+Role: Why it survived
+https://github.com/lowRISC/opentitan/commit/78944e3d4b0af31133ccca88395de4a74d0c6b8b
+
+OpenTitan entropy-source AES agent
+Identifier: entropy_src_env.sv at commit 78944e3
+Role: Why it survived
+https://github.com/lowRISC/opentitan/blob/78944e3d4b0af31133ccca88395de4a74d0c6b8b/hw/ip/entropy_src/dv/env/entropy_src_env.sv
+
+OpenTitan push-pull agent
+Identifier: push_pull_agent_cfg.sv at commit 78944e3
+Role: Why it survived
+https://github.com/lowRISC/opentitan/blob/78944e3d4b0af31133ccca88395de4a74d0c6b8b/hw/dv/sv/push_pull_agent/push_pull_agent_cfg.sv
+
+OpenTitan entropy-source scoreboard
+Identifier: entropy_src_scoreboard.sv at commit 78944e3
+Role: Why it survived
+https://github.com/lowRISC/opentitan/blob/78944e3d4b0af31133ccca88395de4a74d0c6b8b/hw/ip/entropy_src/dv/env/entropy_src_scoreboard.sv
+
+Xilinx AXI demonstration core analysis
+Identifier: Examining Xilinx's AXI demonstration core
+Role: Second instance
+https://zipcpu.com/formal/2019/05/13/axifull.html
+
+
+
+BUG 5
+---
+
+CVA6 source repository
+Identifier: openhwgroup/cva6
+Role: Primary design
+https://github.com/openhwfoundation/cva6
+
+CVA6 CSR issue fix
+Identifier: PR #2329
+Role: Primary instance; fix
+https://github.com/openhwfoundation/cva6/pull/2329
+
+CVA6 CSR-hazard fixing commit
+Identifier: Commit 92e418a
+Role: Primary mechanism; fix; why it survived
+https://github.com/openhwfoundation/cva6/commit/92e418a507134ef4cb95925feba4a72ff7f845cb
+
+CVA6 CSR-port fixing commit
+Identifier: Commit 827daa0
+Role: Primary mechanism; fix; why it survived
+https://github.com/openhwfoundation/cva6/commit/827daa09f413950e28e4f4cb84843e9d8e41a4c5
+
+CVA6 pre-fix parent
+Identifier: Commit 67dba2c
+Role: Why it survived
+https://github.com/openhwfoundation/cva6/commit/67dba2cad376de0190bb5564f1e229de73e86ef1
+
+CVA6 pre-fix CI configuration
+Identifier: .gitlab-ci.yml at commit 67dba2c
+Role: Why it survived
+https://github.com/openhwfoundation/cva6/blob/67dba2cad376de0190bb5564f1e229de73e86ef1/.gitlab-ci.yml
+
+CVA6 pre-fix core configuration
+Identifier: cv32a65x_config_pkg.sv at commit 67dba2c
+Role: Why it survived
+https://github.com/openhwfoundation/cva6/blob/67dba2cad376de0190bb5564f1e229de73e86ef1/core/include/cv32a65x_config_pkg.sv
+
+CVA6 pre-fix CSR regression
+Identifier: dv-riscv-csr-access-test.sh at commit 67dba2c
+Role: Why it survived
+https://github.com/openhwfoundation/cva6/blob/67dba2cad376de0190bb5564f1e229de73e86ef1/verif/regress/dv-riscv-csr-access-test.sh
+
+CVA6 pre-fix scoreboard
+Identifier: uvme_cva6_sb.sv at commit 67dba2c
+Role: Why it survived
+https://github.com/openhwfoundation/cva6/blob/67dba2cad376de0190bb5564f1e229de73e86ef1/verif/env/uvme/uvme_cva6_sb.sv
+
+XiangShan stale vector-length CSR read
+Identifier: Issue #5739
+Role: Second instance
+https://github.com/OpenXiangShan/XiangShan/issues/5739
+
+XiangShan vector-length dependency fix
+Identifier: PR #5743
+Role: Mechanism for second instance
+https://github.com/OpenXiangShan/XiangShan/pull/5743
+
+Intel partial-register erratum
+Identifier: SKL150/KBL095
+Role: Previous second instance retained in revision history
+https://www.intel.com/content/www/us/en/content-details/334408/

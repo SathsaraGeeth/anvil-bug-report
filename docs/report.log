@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.8.5)  29 SEP 2026 04:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.8.5)  30 SEP 2026 21:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -632,28 +632,26 @@ enc/dvips/lm/lm-ec.enc}
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 431--434
+Underfull \hbox (badness 10000) in paragraph at lines 440--443
 []\T1/lmr/m/n/10 (+20) The as-sign-ment al-ready gives the Open-Cores
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 530--533
+[2]
+Underfull \hbox (badness 10000) in paragraph at lines 547--550
 []\T1/lmr/m/n/10 (+20) Issue #13834 [[]] doc-u-mented the un-qual-i-fied
  []
 
 
-Underfull \hbox (badness 2608) in paragraph at lines 530--533
+Underfull \hbox (badness 2608) in paragraph at lines 547--550
 \T1/lmr/m/n/10 (+20) asyn-chronous path. The be-hav-ior was cor-rected in
  []
 
-[2]
-Underfull \hbox (badness 7796) in paragraph at lines 596--599
+
+Underfull \hbox (badness 7796) in paragraph at lines 613--616
 []\T1/lmr/m/n/10 (+20) The as-sign-ment gives the his-tor-i-cal Open-Cores
  []
 
-[3] [4] [5
-
-] (/usr/share/texmf/tex/latex/lm/ot1lmr.fd)
+[3] [4] [5] (/usr/share/texmf/tex/latex/lm/ot1lmr.fd)
 (/usr/share/texmf/tex/latex/lm/omllmm.fd)
 (/usr/share/texmf/tex/latex/lm/omslmsy.fd)
 (/usr/share/texmf/tex/latex/lm/omxlmex.fd)
@@ -661,32 +659,57 @@ Underfull \hbox (badness 7796) in paragraph at lines 596--599
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msa.cfg)
 (/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd)
 (/usr/share/texlive/texmf-dist/tex/latex/microtype/mt-msb.cfg)
-Underfull \hbox (badness 7649) in paragraph at lines 1069--1069
+Underfull \hbox (badness 7649) in paragraph at lines 1109--1109
 []|\T1/lmr/m/n/8 (+20) Structural CDC anal-y-sis
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1069--1069
+Underfull \hbox (badness 10000) in paragraph at lines 1109--1109
 []|\T1/lmr/m/n/8 (+20) Detected when
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1069--1069
+Underfull \hbox (badness 10000) in paragraph at lines 1109--1109
 []|\T1/lmr/m/n/8 (+20) Detected when
  []
 
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 1103.
+(Font)              <10> on input line 1143.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 1103.
+(Font)              <7> on input line 1143.
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
-122.
+162.
 (/usr/share/texmf/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) [6
+)
+Overfull \hbox (3.51566pt too wide) in paragraph at lines 1246--1246
+[]|[]|  
+ []
+
+
+Overfull \hbox (3.51566pt too wide) in paragraph at lines 1246--1246
+[]|[]|  
+ []
+
+
+Overfull \hbox (0.56253pt too wide) in paragraph at lines 1246--1246
+[]|[]|  
+ []
+
+
+Overfull \hbox (0.56253pt too wide) in paragraph at lines 1246--1246
+[]|[]|  
+ []
+
+
+Overfull \hbox (0.56253pt too wide) in paragraph at lines 1246--1246
+[]|[]|  
+ []
+
+[6
 
 {/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf/fonts/enc/
-dvips/lm/lm-ts1.enc}]
+dvips/lm/lm-ts1.enc}] [7]
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -698,7 +721,7 @@ Before submitting the final camera ready copy, remember to:
  uses only Type 1 fonts and that every step in the generation
  process uses the appropriate paper size.
 
-[7
+[8
 
 ] (./report.aux)
  ***********
@@ -709,27 +732,27 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 (rerunfilecheck)             Checksum: C197B0F88AF04746465AC9462F0AE7B3;3577.
  ) 
 Here is how much of TeX's memory you used:
- 16517 strings out of 476182
- 255555 string characters out of 5795596
- 2292975 words of memory out of 5000000
- 37800 multiletter control sequences out of 15000+600000
- 755466 words of font info for 231 fonts, out of 8000000 for 9000
+ 16545 strings out of 476182
+ 256084 string characters out of 5795596
+ 2300975 words of memory out of 5000000
+ 37816 multiletter control sequences out of 15000+600000
+ 755107 words of font info for 229 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,13n,79p,1003b,1304s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,16n,79p,1003b,1532s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf/fonts/type1/public/lm/lmbx10.pfb></usr/share/texmf/fonts/ty
-pe1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx5.pfb></us
+pe1/public/lm/lmbx12.pfb></usr/share/texmf/fonts/type1/public/lm/lmbx7.pfb></us
 r/share/texmf/fonts/type1/public/lm/lmbx8.pfb></usr/share/texmf/fonts/type1/pub
-lic/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi5.pfb></usr/share
+lic/lm/lmmi10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi7.pfb></usr/share
 /texmf/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/
 lmr12.pfb></usr/share/texmf/fonts/type1/public/lm/lmr17.pfb></usr/share/texmf/f
-onts/type1/public/lm/lmr5.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb>
+onts/type1/public/lm/lmr7.pfb></usr/share/texmf/fonts/type1/public/lm/lmr8.pfb>
 </usr/share/texmf/fonts/type1/public/lm/lmtk10.pfb></usr/share/texmf/fonts/type
 1/public/lm/lmtt10.pfb></usr/share/texmf/fonts/type1/public/lm/lmtt8.pfb></usr/
 share/texmf/fonts/type1/public/lm/lmtti10.pfb>
-Output written on report.pdf (7 pages, 426880 bytes).
+Output written on report.pdf (8 pages, 432934 bytes).
 PDF statistics:
- 926 PDF objects out of 1000 (max. 8388607)
- 851 compressed objects within 9 object streams
- 326 named destinations out of 1000 (max. 500000)
- 36105 words of extra memory for PDF output out of 42996 (max. 10000000)
+ 953 PDF objects out of 1000 (max. 8388607)
+ 877 compressed objects within 9 object streams
+ 340 named destinations out of 1000 (max. 500000)
+ 35593 words of extra memory for PDF output out of 35830 (max. 10000000)
 
