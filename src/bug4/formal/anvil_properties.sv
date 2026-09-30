@@ -15,6 +15,7 @@ module handshake_anvil_fixed_properties;
     logic f_ack_ack;
     logic f_past_req_valid;
     logic [7:0] f_past_req;
+    logic f_ack_pending;
     logic f_formal_valid = 1'b0;
 
     initial
@@ -41,6 +42,7 @@ module handshake_anvil_fixed_properties;
         if (!f_rst_n) begin
             f_past_req_valid <= 1'b0;
             f_past_req <= '0;
+            f_ack_pending <= 1'b0;
         end else begin
             if (f_past_req_valid && !f_req_ack) begin
                 assert (f_req_valid);
@@ -48,6 +50,14 @@ module handshake_anvil_fixed_properties;
             end
             f_past_req_valid <= f_req_valid && !f_req_ack;
             f_past_req <= f_req;
+
+            if (f_ack_valid && f_ack_ack)
+                f_ack_pending <= 1'b0;
+            else if (f_req_valid && f_req_ack)
+                f_ack_pending <= 1'b1;
+
+            if (f_ack_pending)
+                assert (!f_word_ack);
         end
     end
 endmodule : handshake_anvil_fixed_properties

@@ -739,9 +739,9 @@ mask_d = sha3_start ? 1'b1 : sha3_msg_end ? 1'b0 : mask_q;
 \end{lstlisting}
 
 Therefore, additional words could be accepted while the design waited for the
-AES acknowledgement. The fix stops accepting new input when
-\texttt{cs\_aes\_halt\_req} is asserted. It also waits for the acknowledgement
-to return low before allowing the next operation.
+previous AES acknowledgement to return low. The fix clears the stored ready
+mask when \texttt{cs\_aes\_halt\_req} is asserted. It also waits for the
+acknowledgement to return low before allowing the next operation.
 
 \begin{lstlisting}
 // Fixed code
@@ -764,8 +764,9 @@ The buggy and fixed SystemVerilog variants are provided separately
 \subsection{Why It Survived}
 
 % - Why simulation, review, or lint did not catch it
-The UVM environment randomized AES handshake delays, but did not check that a
-request immediately stopped message acceptance
+The UVM environment randomized AES handshake delays, but did not check that
+message acceptance remained blocked until the four-phase acknowledgement
+returned low
 \cite{handshake-parent,entropy-aes-agent,push-pull-agent,entropy-scoreboard}.
 
 % - Was condition rare? property dont cover it? tool silent by construction?
@@ -806,14 +807,14 @@ accepted |-> valid && ready
 request_started |-> required_sequence_holds_until_idle
 \end{lstlisting}
 
-For this reproducer, the concrete invariant is that the halt request immediately
-blocks readiness.
+For this reproducer, the concrete invariant is that readiness remains low from
+the time the request is acknowledged until ACK returns low.
 
 The simulation implementation \cite{bug4-simulation-check}:
 
 \begin{lstlisting}
 assert (accepted == 2 && !msg_ready)
-  else $fatal(1, "accepted input while waiting for ack");
+  else $fatal(1, "started the next message before ack returned low");
 \end{lstlisting}
 
 The corresponding formal property is implemented in
@@ -821,10 +822,16 @@ The corresponding formal property is implemented in
 
 \begin{lstlisting}
 always_ff @(posedge f_clk) begin
-  if (!f_rst_n)
+  if (!f_rst_n) begin
     f_past_valid <= 1'b0;
-  else
+    f_ack_pending <= 1'b0;
+  end else begin
     f_past_valid <= 1'b1;
+    if (!f_aes_ack)
+      f_ack_pending <= 1'b0;
+    else if (f_aes_req)
+      f_ack_pending <= 1'b1;
+  end
 end
 
 property p_reset_before_past_valid;
@@ -837,10 +844,10 @@ property p_reset_remains_deasserted;
   f_past_valid |-> f_rst_n;
 endproperty: p_reset_remains_deasserted
 
-property p_request_applies_backpressure;
+property p_ack_pending_blocks_input;
   @(posedge f_clk) disable iff (!f_rst_n)
-  f_past_valid && f_aes_req |-> !f_msg_ready;
-endproperty: p_request_applies_backpressure
+  f_ack_pending |-> !f_msg_ready;
+endproperty: p_ack_pending_blocks_input
 
 property p_ack_eventually_asserts;
   @(posedge f_clk) disable iff (!f_rst_n)
@@ -865,7 +872,7 @@ assume property (p_reset_remains_deasserted);
 assume property (p_ack_eventually_asserts);
 assume property (p_ack_eventually_deasserts);
 
-assert property (p_request_applies_backpressure);
+assert property (p_ack_pending_blocks_input);
 assert property (p_handshake_eventually_returns_idle);
 \end{lstlisting}
 
@@ -1596,6 +1603,10 @@ ASPLOS, 2026.
 \href{run:../src/bug5/formal/results/logs/anvil_compile_fixed.log}{\path{src/bug5/formal/results/logs/anvil_compile_fixed.log}};
 \href{run:../src/bug5/formal/results/logs/anvil_buggy.log}{\path{src/bug5/formal/results/logs/anvil_buggy.log}};
 \href{run:../src/bug5/formal/results/logs/anvil_fixed.log}{\path{src/bug5/formal/results/logs/anvil_fixed.log}}.
+
+\bibitem{source-inventory}
+Source inventory:
+\href{run:sources.txt}{\path{docs/sources.txt}}.
 \end{thebibliography}
 
 \section*{Revision History}
@@ -1606,6 +1617,7 @@ ASPLOS, 2026.
   bug~\cite{xiangshan-vl-bug,xiangshan-vl-fix}.
   \item 2: Generalized the detection discussions for Bugs~1-5.
   \item 3: Clarified Bug~3's reduction scope.
+  \item 4: Fix the Bug~4 reproducer.
 \end{itemize}
 
 \end{document}

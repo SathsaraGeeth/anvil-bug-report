@@ -14,7 +14,7 @@ proc handshake_delay(input : left message_ch, aes : right aes_ch) {
         let word = recv input.word >>
         set block := word >>
 
-        send aes.req(*block);
+        send aes.req(*block) >>
         let extra_word = recv input.word >>
         set block := extra_word >>
         let acknowledgement = recv aes.ack >>

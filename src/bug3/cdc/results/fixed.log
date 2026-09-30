@@ -1,7 +1,7 @@
 frontend: slang
 top:      cdc_check_top
-src:      ../../src/bug3/rtl/fixed.sv
-src:      ../../src/bug3/cdc/top.sv
+src:      src/bug3/rtl/fixed.sv
+src:      src/bug3/cdc/top.sv
 rtl-buddy-cdc 0.5.0 — cdc_check_top                                         PASS
 
 Design

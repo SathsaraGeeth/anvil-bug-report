@@ -10,12 +10,19 @@ module properties;
     logic f_aes_req;
     logic [3:0] f_accepted;
     logic f_past_valid;
+    logic f_ack_pending;
 
     always_ff @(posedge f_clk) begin
-        if (!f_rst_n)
+        if (!f_rst_n) begin
             f_past_valid <= 1'b0;
-        else
+            f_ack_pending <= 1'b0;
+        end else begin
             f_past_valid <= 1'b1;
+            if (!f_aes_ack)
+                f_ack_pending <= 1'b0;
+            else if (f_aes_req)
+                f_ack_pending <= 1'b1;
+        end
     end
 
     handshake_delay dut(.i_clk(f_clk),
@@ -39,6 +46,10 @@ module properties;
             !f_msg_ready;
     endproperty : p_request_applies_backpressure
 
+    property p_ack_pending_blocks_input;
+        @(posedge f_clk) disable iff(!f_rst_n) f_ack_pending |-> !f_msg_ready;
+    endproperty : p_ack_pending_blocks_input
+
     property p_ack_eventually_asserts;
         @(posedge f_clk) disable iff(!f_rst_n) f_past_valid && f_aes_req |->
             s_eventually f_aes_ack;
@@ -61,6 +72,9 @@ module properties;
 
 a_request_applies_backpressure:
     assert property (p_request_applies_backpressure);
+
+a_ack_pending_blocks_input:
+    assert property (p_ack_pending_blocks_input);
 
 a_handshake_eventually_returns_idle:
     assert property (p_handshake_eventually_returns_idle);

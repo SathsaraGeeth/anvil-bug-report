@@ -1,7 +1,7 @@
 frontend: slang
 top:      cdc_check_top
-src:      ../../src/bug3/rtl/buggy.sv
-src:      ../../src/bug3/cdc/top.sv
+src:      src/bug3/rtl/buggy.sv
+src:      src/bug3/cdc/top.sv
 rtl-buddy-cdc 0.5.0 — cdc_check_top                                         FAIL
 
 Design
@@ -11,7 +11,7 @@ Design
 Violations  (1 error)
 
   CDC-004 — Bus crossing without gating or gray-coding
-    error  ../../src/bug3/cdc/top.sv:30
+    error  src/bug3/cdc/top.sv:30
       unprotected bus crossing on wr_clk → rd_clk: 8-bit path with no
       recognized gating or gray-coding (src: dut.$slang$adff$1, dst flop:
       $slang$adff$5)

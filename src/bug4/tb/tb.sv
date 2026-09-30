@@ -39,6 +39,28 @@ initial begin
     assert (accepted == 2 && !msg_ready)
         else $fatal(1, "accepted input while waiting for acknowledgement");
 
+    @(negedge clk);
+    msg_valid = 1'b0;
+    repeat (2) @(posedge clk);
+    @(negedge clk);
+    aes_ack   = 1'b1;
+    msg_valid = 1'b1;
+    repeat (5) @(posedge clk);
+    #1;
+    assert (accepted == 2 && !msg_ready)
+        else $fatal(1, "started the next message before acknowledgement returned low");
+
+    @(negedge clk);
+    aes_ack   = 1'b0;
+    msg_valid = 1'b0;
+    repeat (2) @(posedge clk);
+    @(negedge clk);
+    msg_valid = 1'b1;
+    repeat (3) @(posedge clk);
+    #1;
+    assert (accepted == 4 && !msg_ready)
+        else $fatal(1, "did not request a halt for the second message");
+
     $finish;
 end
 

@@ -91,6 +91,35 @@ initial begin
     word_valid = 1'b0;
     wait (req_valid);
     assert (req == 8'hA5);
+
+    @(negedge clk);
+    req_ack = 1'b1;
+    @(posedge clk);
+    @(negedge clk);
+    req_ack = 1'b0;
+
+    word = 8'h5A;
+    word_valid = 1'b1;
+    repeat (2) @(posedge clk);
+    #1;
+    assert (!word_ack)
+        else $fatal(1, "started the next message before acknowledgement returned low");
+    @(negedge clk);
+    word_valid = 1'b0;
+
+    wait (ack_ack);
+    ack_valid = 1'b1;
+    @(posedge clk);
+    @(negedge clk);
+    ack_valid = 1'b0;
+
+    wait (word_ack);
+    word_valid = 1'b1;
+    @(posedge clk);
+    @(negedge clk);
+    word_valid = 1'b0;
+    wait (req_valid);
+    assert (req == 8'h5A);
     $finish;
 `endif
 end

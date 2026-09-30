@@ -11,6 +11,7 @@ module sby_properties;
     logic f_aes_req;
     logic [3:0] f_accepted;
     logic f_past_valid = 1'b0;
+    logic f_ack_pending;
 
     handshake_delay dut(.i_clk(f_clk),
                         .i_rst_n(f_rst_n),
@@ -21,10 +22,16 @@ module sby_properties;
                         .o_accepted(f_accepted));
 
     always_ff @(posedge f_clk) begin
-        if (!f_rst_n)
+        if (!f_rst_n) begin
             f_past_valid <= 1'b0;
-        else
+            f_ack_pending <= 1'b0;
+        end else begin
             f_past_valid <= 1'b1;
+            if (!f_aes_ack)
+                f_ack_pending <= 1'b0;
+            else if (f_aes_req)
+                f_ack_pending <= 1'b1;
+        end
     end
 
     initial
@@ -40,6 +47,9 @@ module sby_properties;
 
     always_ff @(posedge f_clk) begin
         if (f_rst_n && f_past_valid && f_aes_req)
+            assert (!f_msg_ready);
+
+        if (f_rst_n && f_ack_pending)
             assert (!f_msg_ready);
 
         assert property (s_eventually(!f_aes_req && !f_aes_ack));

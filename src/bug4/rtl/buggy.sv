@@ -10,23 +10,52 @@ module handshake_delay (
     output logic [3:0] o_accepted
 );
 
-typedef enum logic {COLLECT, WAIT_ACK} state_t;
+typedef enum logic [1:0] {
+    COLLECT,
+    WAIT_ACK_HIGH,
+    WAIT_ACK_LOW,
+    START_NEXT
+} state_t;
 state_t r_state;
+logic r_word_count;
+logic r_msg_mask;
+logic w_msg_start;
+logic w_msg_process;
+logic w_msg_end;
 
-assign o_aes_req   = r_state == WAIT_ACK;
-assign o_msg_ready = 1'b1;
+assign o_aes_req     = r_state == WAIT_ACK_HIGH;
+assign w_msg_start   = r_state == START_NEXT;
+assign w_msg_process = r_state == WAIT_ACK_HIGH && i_aes_ack;
+assign w_msg_end     = w_msg_process;
+assign o_msg_ready   = r_msg_mask && !w_msg_end && !o_aes_req;
 
 always_ff @(posedge i_clk) begin
     if (!i_rst_n) begin
-        r_state     <= COLLECT;
-        o_accepted  <= '0;
+        r_state      <= COLLECT;
+        r_word_count <= 1'b0;
+        r_msg_mask   <= 1'b1;
+        o_accepted   <= '0;
     end else begin
-        if (i_msg_valid && o_msg_ready)
+        if (w_msg_start)
+            r_msg_mask <= 1'b1;
+        else if (w_msg_end)
+            r_msg_mask <= 1'b0;
+
+        if (i_msg_valid && o_msg_ready) begin
             o_accepted <= o_accepted + 1'b1;
-        if (r_state == COLLECT && i_msg_valid && o_accepted == 1)
-            r_state <= WAIT_ACK;
-        else if (r_state == WAIT_ACK && i_aes_ack)
+            r_word_count <= r_word_count + 1'b1;
+        end
+
+        if (r_state == COLLECT && i_msg_valid && o_msg_ready && r_word_count == 1'b1)
+            r_state <= i_aes_ack ? WAIT_ACK_LOW : WAIT_ACK_HIGH;
+        else if (r_state == WAIT_ACK_HIGH && i_aes_ack)
+            r_state <= START_NEXT;
+        else if (r_state == WAIT_ACK_LOW && !i_aes_ack)
+            r_state <= WAIT_ACK_HIGH;
+        else if (r_state == START_NEXT) begin
             r_state <= COLLECT;
+            r_word_count <= 1'b0;
+        end
     end
 end
 
